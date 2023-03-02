@@ -1,0 +1,171 @@
+<div class="main-content list-token kt-margin-t-30">
+    <h1></h1>
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTitle>
+            <h3 class="kt-portlet__head-title kt-margin-t-30">
+                <span>{{'USER.DETAIL.TOKEN_LIST.TITLE'| translate}}</span>
+            </h3>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="kt-form">
+            <!-- start::FILTERS -->
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid filter-token">
+                            <mat-select multiple [(ngModel)]="statusValue" #status="ngModel"
+                                        (selectionChange)="filterTokenByStatus()">
+                                <mat-select-trigger>
+                                    {{statusValue.length === filterStatus.length ? 'Tất cả' : statusValue}}
+                                </mat-select-trigger>
+                                <select-check-all title="Tất cả" (click)="filterTokenByStatus()" [model]="status"
+                                                  [values]="filterStatus">
+                                </select-check-all>
+                                <mat-option *ngFor="let status of filterStatus" [value]="status">
+                                    {{status|titlecase}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-hint align="start">{{'USER.DETAIL.TOKEN_LIST.FILTER_BY_STATUS'|translate}}
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <!-- end::FILTERS -->
+            <div class="box-table">
+                <mat-table [dataSource]="listToken"
+                           matSort (matSortChange)="onSortChange($event)"
+                           class="mat-elevation-z8">
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell *matHeaderCellDef class="col-small">
+                            {{'USER.DETAIL.TOKEN_LIST.INDEX'|translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;" class="col-small">
+                            {{i + 1}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="refreshToken">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'USER.DETAIL.TOKEN_LIST.REFRESH_TOKEN'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.token}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdTime">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'USER.DETAIL.TOKEN_LIST.CREATED_TIME'|translate}}
+                        </mat-header-cell>
+                        <mat-cell
+                            *matCellDef="let element"> {{element.created_time | date: 'dd/MM/yyyy hh:mm a'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ip">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'USER.DETAIL.TOKEN_LIST.IP'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.ip}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="expiredDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'USER.DETAIL.TOKEN_LIST.EXPIRED_DATE'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.expire_time | date: 'dd/MM/yyyy hh:mm a'}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'USER.DETAIL.TOKEN_LIST.STATUS'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span
+                                class="kt-badge kt-badge--inline kt-badge--pill {{ getItemCssClassByStatus(element.status) }} kt-badge--wide">{{ element.status }}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef class="col-actions-large">
+                            {{'USER.DETAIL.TOKEN_LIST.ACTIONS'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item" class="col-actions-large">
+
+                            <div *ngIf="!item.approved && item.status !='EXPIRED'">
+                                <ng-container>
+                                    <button mat-icon-button color="primary"
+                                            [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_APPROVE_TOKEN')"
+                                            (click)="approveToken(item)">
+                                        <mat-icon class="success" matTooltip="{{'USER.DETAIL.TOKEN_LIST.APPROVE' | translate}}">
+                                            done
+                                        </mat-icon>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container>
+                                    <button mat-icon-button color="primary"
+                                            [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_UN_APPROVE_TOKEN')"
+                                            (click)="unApproveToken(item)">
+                                        <mat-icon class="delete" matTooltip="{{'USER.DETAIL.TOKEN_LIST.UNAPPROVE' | translate}}">
+                                            close
+                                        </mat-icon>
+                                    </button>
+                                </ng-container>
+                            </div>
+
+                            <div *ngIf="item.approved && item.status !='EXPIRED'">
+                                <ng-container>
+                                    <button mat-icon-button color="primary"
+                                            [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_CHANGE_STATUS_TOKEN')"
+                                            (click)="updateStatusToken(item)">
+                                        <mat-icon class="play"
+                                                  [matTooltip]="item.status == 'DEACTIVE' ? 'Tiếp tục' : 'Tạm dừng'">
+                                            {{item.status === 'DEACTIVE' ? 'play_arrow' : 'pause'}}
+                                        </mat-icon>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container>
+                                    <button mat-icon-button color="primary"
+                                            [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_CHANGE_STATUS_TOKEN')"
+                                            (click)="deleteToken(item)">
+                                        <mat-icon class="delete" matTooltip="{{'COMMON.DELETE_TOOLTIP' | translate}}">
+                                            delete
+                                        </mat-icon>
+                                    </button>
+                                </ng-container>
+                            </div>
+
+                            <div *ngIf="item.status =='EXPIRED'">
+                                <ng-container>
+                                    <button mat-icon-button color="primary"
+                                            [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_DELETE_TOKEN')"
+                                            (click)="deleteToken(item)">
+                                        <mat-icon class="delete" matTooltip="{{'COMMON.DELETE_TOOLTIP' | translate}}">
+                                            delete
+                                        </mat-icon>
+                                    </button>
+                                </ng-container>
+                            </div>
+
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <div class="no-record" *ngIf="listToken.length==0">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+            <mat-paginator [pageSize]="limit"
+                           [pageSizeOptions]="pageSizeOption"
+                           [length]="totalElement"
+                           [pageIndex]="page"
+                           [showFirstLastButtons]="true"
+                           (page)="pageChange($event)">
+            </mat-paginator>
+        </div>
+    </kt-portlet-body>
+</div>

@@ -1,0 +1,82 @@
+<div class="kt-portlet">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{'SYSTEM_CONFIG.EDIT.TITLE'|translate}}</h3>
+		</div>
+	</div>
+	<form class="kt-form" [formGroup]="configForm">
+		<div class="kt-portlet__body">
+			<div class="form-group kt-form__group row">
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput readonly
+							   class="input-disabled"
+							   formControlName="key"/>
+						<mat-hint align="start">{{'SYSTEM_CONFIG.EDIT.KEY_INPUT_TITLE'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput
+							   formControlName="value"
+							   (change)="onChangeInput('value',$event)"/>
+						<mat-error *ngIf="validateForm('value','required')">
+							<strong>{{'SYSTEM_CONFIG.EDIT.VALUE_INPUT_VALIDATE_REQUIRED'|translate}}</strong>
+						</mat-error>
+						<mat-error *ngIf="validateForm('value','pattern')">
+							<strong>{{'SYSTEM_CONFIG.ADD.VALUE_INPUT_VALIDATE_REQUIRED'|translate}}</strong>
+						</mat-error>
+						<mat-error *ngIf="validateForm('value','maxlength')">
+							<strong>{{'SYSTEM_CONFIG.ADD.VALUE_INPUT_VALIDATE_MAX_LENGTH'|translate}}</strong>
+						</mat-error>
+						<mat-hint align="start">{{'SYSTEM_CONFIG.EDIT.VALUE_INPUT_TITLE'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<textarea matInput placeholder=""
+								  matTextareaAutosize
+								  matAutosizeMinRows=3
+								  matAutosizeMaxRows=3
+								  formControlName="note">
+						</textarea>
+						<mat-error *ngIf="validateForm('note','maxlength')">
+							<strong>{{'SYSTEM_CONFIG.ADD.NOTE_INPUT_VALIDATE_MAX_LENGTH'|translate}}</strong>
+						</mat-error>
+						<mat-hint align="start">{{'SYSTEM_CONFIG.EDIT.NOTE_INPUT_TITLE'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+			<div class="kt-form__actions kt-form__actions--solid">
+				<div class="row text-right">
+					<div class="col-lg-12">
+						<button type="button"
+								class="btn-cancel"
+								mat-raised-button
+								cdkFocusInitial
+								matTooltip="{{'SYSTEM_CONFIG.EDIT.CANCEL_BUTTON_TITLE'|translate}}"
+								(click)="close()">
+							{{'SYSTEM_CONFIG.EDIT.CANCEL_BUTTON_TITLE'|translate}}
+						</button>&nbsp;
+						<button type="button"
+								color="primary"
+								class="btn-save"
+								mat-raised-button
+								matTooltip="{{'SYSTEM_CONFIG.EDIT.SAVE_BUTTON_TITLE'|translate}}"
+								[disabled]="!configForm.dirty&&!configForm.pristine"
+                                (click)="edit()"
+                                [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}" 
+                                >
+							{{'SYSTEM_CONFIG.EDIT.SAVE_BUTTON_TITLE'|translate}}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

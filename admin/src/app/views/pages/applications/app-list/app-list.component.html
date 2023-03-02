@@ -1,0 +1,149 @@
+<kt-portlet class="main-content">
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTitle>
+            <h3 class="kt-portlet__head-title">
+                <span>{{'APP.GENERAL.TITLE'|translate}}</span>
+            </h3>
+        </ng-container>
+        <ng-container ktPortletTools>
+            <button *ngIf="checkPermission('DEVELOPER')" class="add-button" mat-raised-button matTooltip=""
+                color="primary" type="button" (click)="add()">
+                <span>
+                    <mat-icon>add</mat-icon>
+                    {{'APP.GENERAL.ADD_APP'|translate}}
+                </span>
+            </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="kt-form kt-margin-b-30">
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="{{ 'COMMON.SEARCH_TOOLTIP' | translate }}"
+                                [(ngModel)]="searchValue" (keyup.enter)="search()" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+                        <button mat-button color="primary" (click)="search()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-table">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+                    class="mat-elevation-z8">
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell *matHeaderCellDef class="col-small"> {{'APP.GENERAL.INDEX'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;" class="col-small">
+                            {{ page * limit + i + 1 }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.GENERAL.APP_NAME'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.name}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="auth_type">
+                        <mat-header-cell *matHeaderCellDef>
+                            {{'APP.GENERAL.AUTH_TYPE'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.auth_type}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="clientId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'APP.GENERAL.CLIENT_ID'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.client_id}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="creatorName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'APP.GENERAL.CREATED_NAME'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.creatorName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdTime">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.GENERAL.CREATED_TIME'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.created_time | date: 'dd/MM/yyyy hh:mm a'}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.GENERAL.STATUS'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span
+                                class="kt-badge kt-badge--inline kt-badge--pill {{ getItemCssClassByStatus(element.status) }} kt-badge--wide">{{ element.status }}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef class="col-actions-large">
+                            {{'APP.GENERAL.ACTIONS'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item" class="col-actions-large">
+                            <ng-container>
+                                <button mat-icon-button color="primary"
+                                    [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_GET_BY_ID','APPLICATION',item.id)"
+                                    (click)="viewApp(item)">
+                                    <mat-icon matTooltip="{{'COMMON.VIEW_DETAIL_TOOLTIP' | translate}}">remove_red_eye
+                                    </mat-icon>
+                                </button>
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button color="primary"
+                                    [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_CHANGE_STATUS','APPLICATION',item.id)"
+                                    (click)="updateStatus(item)">
+                                    <mat-icon [ngClass]="item.status == 'DEACTIVE' ? 'play' : 'pause'"
+                                        [matTooltip]="item.status == 'DEACTIVE' ? 'Tiếp tục' : 'Tạm dừng'">
+                                        {{item.status === 'DEACTIVE' ? 'play_arrow' : 'pause'}}
+                                    </mat-icon>
+                                </button>
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button color="primary"
+                                    [hidden]="!checkPermission('DEVELOPER') || !checkPermission('CLIENT_DELETE','APPLICATION',item.id)"
+                                    (click)="deleteApp(item)">
+                                    <mat-icon class="delete" matTooltip="{{'COMMON.DELETE_TOOLTIP' | translate}}">
+                                        delete
+                                    </mat-icon>
+                                </button>
+                            </ng-container>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <div class="box-spiner" *ngIf='loading && dataSource.length==0'>
+                <mat-spinner></mat-spinner>
+            </div>
+            <div class="no-record" *ngIf="!loading && dataSource.length==0 && checkPermission('DEVELOPER')">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+            <div *ngIf="dataSource.length==0 && !checkPermission('DEVELOPER')" class="no-record access-noti">
+                <p>{{'COMMON.FORBIDDEN' | translate}}</p>
+            </div>
+            <div class="mat-table__bottom">
+                <mat-paginator [pageSize]="limit" [pageSizeOptions]="pageSizeOption" [length]="totalElement"
+                    (page)="onPageChange($event)" [pageIndex]="page" [showFirstLastButtons]="true">
+                </mat-paginator>
+            </div>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

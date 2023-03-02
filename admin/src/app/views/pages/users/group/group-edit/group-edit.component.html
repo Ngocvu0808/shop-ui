@@ -1,0 +1,64 @@
+<div class="kt-portlet group-user-edit">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{'GROUP.EDIT.TITLE'|translate}}</h3>
+		</div>
+	</div>
+	<form class="kt-form" [formGroup]="formEdit">
+		<div class="kt-portlet__body">
+			<div class="form-group kt-form__group row">
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-label>{{'GROUP.EDIT.GROUP_NAME'|translate}}</mat-label>
+						<label>
+							<input matInput placeholder="{{'GROUP.ADD.GROUP_NAME'|translate}}" formControlName="name"/>
+						</label>
+						<mat-error
+							*ngIf="validateForm('name','required')">{{'GROUP.EDIT.GROUP_NAME_REQUIRED'|translate}}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('name','maxlength')">{{'GROUP.EDIT.GROUP_NAME_TOO_LONG'|translate}}
+						</mat-error>
+						<mat-hint align="start">{{'GROUP.EDIT.ENTER_GROUP_NAME'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-label>{{'GROUP.EDIT.GROUP_ID'|translate}}</mat-label>
+						<label>
+							<input matInput class="input-disabled" readonly formControlName="code"/>
+						</label>
+						<mat-hint align="start">
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<p class="form-label">{{'GROUP.EDIT.ROLE'|translate}}</p>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<div class="box-role-check">
+						<mat-checkbox class="role-check"
+									  *ngFor="let role of roles"
+									  [value]="role.id"
+									  [checked]=getCheckedRole(role.id)
+									  (change)="onChange($event)">{{role.name}}
+						</mat-checkbox>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+			<div class="kt-form__actions kt-form__actions--solid">
+				<div class="row text-right">
+					<div class="col-lg-12">
+						<button class="btn-cancel" (click)="close()" type="button" mat-raised-button cdkFocusInitial>
+							{{ 'COMMON.BTN_CANCEL' | translate }}
+						</button>&nbsp;
+						<button class="btn-save" (click)="edit()" type="button" mat-raised-button color="primary">
+							{{ 'COMMON.BTN_SAVE' | translate }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

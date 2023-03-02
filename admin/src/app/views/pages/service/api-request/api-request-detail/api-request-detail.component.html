@@ -1,0 +1,65 @@
+<div class="kt-portlet popup-medium">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{ 'API_REQUEST.DETAIL.TITLE' | translate }}</h3>
+		</div>
+	</div>
+	<div class="kt-form">
+		<div class="kt-body">
+			<p class="content-detail bold">{{apiDetail.name}}</p>
+			<p class="content-detail"><span class="detail-label">Method</span> <span
+				class="data-content notice">{{apiDetail ? apiDetail.method : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">API</span> <span
+				class="data-content highlight">{{apiDetail ? apiDetail.api : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">Code</span> <span
+				class="data-content">{{apiDetail ? apiDetail.id : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">Type</span> <span
+				class="data-content">{{apiDetail ? apiDetail.type : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">System</span> <span
+				class="data-content">{{apiDetail ? (apiDetail.system ? apiDetail.system.name : "") : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">Service</span> <span
+				class="data-content">{{apiDetail ? (apiDetail.service ? apiDetail.service.name : "") : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">Application</span> <span
+				class="data-content">{{apiDetail ? (apiDetail.client ? apiDetail.client.name : "") : ""}}</span></p>
+			<p class="content-detail"><span class="detail-label">User</span> <span
+				class="data-content">{{apiDetail ? apiDetail.username : ""}}</span></p>
+			<p class="content-detail des"><span class="detail-label des">Purpose</span> <span
+				class="data-content des">{{apiDetail.purpose}}</span>
+			</p>
+			<p class="content-detail des"><span class="detail-label des d-inline-block">Time request</span> <span
+				class="data-content des">{{apiDetail.createdTime| date: 'dd/MM/yyyy hh:mm a'}}</span></p>
+		</div>
+		<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+			<div class="kt-form__actions kt-form__actions--solid">
+				<div class="row text-right">
+					<div class="col-lg-12">
+						<button *ngIf="apiDetail.status=='REQUESTING'"
+								class="btn-save"
+								type="button"
+								mat-raised-button
+								color="primary"
+								(click)="approved()">
+							{{ 'COMMON.BTN_APPROVED' | translate }}
+						</button>
+						&nbsp;
+						<button *ngIf="apiDetail.status=='REQUESTING'"
+								class="btn-cancel"
+								type="button"
+								mat-raised-button
+								color="accent"
+								(click)="reject()">
+							{{ 'COMMON.BTN_REJECT' | translate }}
+						</button>
+						&nbsp;
+						<button type="button"
+								mat-raised-button
+								cdkFocusInitial
+								(click)="close()">
+							{{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

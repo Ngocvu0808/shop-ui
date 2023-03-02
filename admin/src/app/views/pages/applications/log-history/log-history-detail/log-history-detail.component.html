@@ -1,0 +1,100 @@
+<div class="kt-portlet popup-medium">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.TITLE' | translate }}</h3>
+        </div>
+    </div>
+    <div class="kt-form">
+        <div class="kt-body">
+            <p class="content-detail des d-flex align-items-baseline">
+                <span class="detail-label large-label des d-inline-block">
+                    {{ 'APP.LOG_HISTORY.VIEW_DETAIL.ACCESS_TOKEN' | translate }}
+                </span>
+                <span class="col-md-4 data-content large-label des bold text-truncate">
+                    {{logsHistoryDetail ? logsHistoryDetail.token : ""}}
+                </span>
+                <button 
+                    *ngIf="logsHistoryDetail"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="copy"
+                    (click)="copyMessage(logsHistoryDetail.token)"
+                >
+                    <mat-icon>
+                        library_books
+                    </mat-icon>
+                </button>
+            </p>
+            <p class="content-detail des">
+                <span
+                    class="detail-label large-label des d-inline-block">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.REQUESTED_BY' | translate }}</span>
+                <span
+                    class="data-content large-label des bold">{{logsHistoryDetail ? logsHistoryDetail.nameUser : ""}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label large-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.IP' | translate }}</span>
+                <span class="data-content large-label des bold">{{logsHistoryDetail ? logsHistoryDetail.ip : ""}}</span>
+            </p>
+            <p class="content-detail">
+                <span
+                    class="detail-label large-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.REQUESTED_AT' | translate }}</span>
+                <span
+                    class="data-content large-label des bold">{{logsHistoryDetail ? logsHistoryDetail.requestTime : ""}}</span>
+            </p>
+            <p class="content-detail bold">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.HTTP_REQUEST' | translate }}</p>
+            <p class="content-detail">
+                <span class="detail-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.METHOD' | translate }}</span>
+                <span class="data-content  highlight des">{{logsHistoryDetail ? logsHistoryDetail.method : ""}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.API' | translate }}</span>
+                <span class="data-content  highlight des">{{logsHistoryDetail ? logsHistoryDetail.apiUrl : ""}}</span>
+            </p>
+
+            <p class="content-detail des">
+                <span class="detail-label des">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.HEADERS' | translate }}</span>
+                <span class="data-content highlight des w-100 overflow-auto">
+                    {{ logsHistoryDetail ? logsHistoryDetail.headers : "" }}
+                </span>
+            </p>
+            <p class="content-detail des">
+                <span
+                    class="detail-label des large-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.REQUEST_BODY' | translate }}</span>
+                <span class="data-content highlight des w-100 overflow-auto">
+                    {{logsHistoryDetail ? logsHistoryDetail.body : ""}}
+                </span>
+            </p>
+            <p class="content-detail des">
+                <span class="detail-label des">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.RESPONSE' | translate }}</span>
+                <span class="data-content highlight des w-100 overflow-auto">
+                    {{logsHistoryDetail ? logsHistoryDetail.resBody : ""}}
+                </span>
+            </p>
+            <p class="content-detail">
+                <span
+                    class="detail-label large-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.HTTP_STATUS' | translate }}</span>
+                <span
+                    class="data-content large-label des bold">{{logsHistoryDetail ? logsHistoryDetail.resHttpCode : "Success"}}</span>
+            </p>
+            <p class="content-detail">
+                <span
+                    class="detail-label large-label">{{ 'APP.LOG_HISTORY.VIEW_DETAIL.RESPONSE_TIME' | translate }}</span>
+                <span
+                    class="data-content large-label des bold">{{logsHistoryDetail ? logsHistoryDetail.responseTime : ""}}</span>
+
+            </p>
+
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial (click)="close()">
+                            {{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

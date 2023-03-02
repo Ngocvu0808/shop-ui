@@ -1,0 +1,85 @@
+<kt-portlet class="popup-large user-add-to-group">
+	<kt-portlet-header [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTitle>
+			<h3 class="kt-portlet__head-title">
+				<span>{{'GROUP.DETAIL.USER_LIST.TITLE'|translate}}</span>
+			</h3>
+		</ng-container>
+	</kt-portlet-header>
+	<kt-portlet-body>
+		<div class="kt-form kt-margin-b-30">
+			<!-- start::FILTERS -->
+			<div class="kt-form__filtration">
+				<div class="row align-items-center">
+					<div class="col-md-7 kt-margin-bottom-10-mobile">
+						<mat-form-field class="mat-form-field-fluid">
+							<label>
+								<input matInput [(ngModel)]="inputSearch"
+									   placeholder="{{'GROUP.DETAIL.USER_LIST.SEARCH'|translate}}">
+							</label>
+						</mat-form-field>
+					</div>
+					<div class="col-md-1 kt-margin-bottom-10-mobile">
+						<button mat-button color="primary" (click)="search()">
+							<mat-icon>search</mat-icon>
+						</button>
+					</div>
+					<div class="col-md-4 text-right">
+						<ng-container ktPortletTools>
+							<button mat-raised-button
+									class="mr-2"
+									color="primary" type="button"
+									(click)="addUserToGroup()">
+								{{ 'COMMON.BTN_ADD_LABEL' | translate }}
+							</button>
+							<button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial
+									(click)="close()">
+								{{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+							</button>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+			<!-- end::FILTERS -->
+			<mat-table [dataSource]="users" class="">
+				<ng-container matColumnDef="select">
+					<mat-header-cell *matHeaderCellDef class="mat-column-checkbox">
+						<mat-checkbox (change)="onMasterChange($event)"
+									  [checked]="isCheckAll"
+									  [color]="'primary'">
+						</mat-checkbox>
+					</mat-header-cell>
+					<mat-cell *matCellDef="let row" class="mat-column-checkbox">
+						<mat-checkbox (click)="$event.stopPropagation()"
+									  (change)="onCheckboxChange($event,row)"
+									  [checked]="isCheckAll||selection.isSelected(row)"
+									  [color]="'primary'">
+						</mat-checkbox>
+					</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="display_name">
+					<mat-header-cell *matHeaderCellDef> {{'GROUP.DETAIL.USER_LIST.NAME'|translate}} </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="user_name">
+					<mat-header-cell
+						*matHeaderCellDef> {{'GROUP.DETAIL.USER_LIST.USER_NAME'|translate}} </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.username}} </mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="email">
+					<mat-header-cell *matHeaderCellDef> {{'GROUP.DETAIL.USER_LIST.EMAIL'|translate}} </mat-header-cell>
+					<mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+				</ng-container>
+
+				<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+				<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+				<div *ngIf="users.length == 0">
+					<p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+				</div>
+			</mat-table>
+		</div>
+	</kt-portlet-body>
+</kt-portlet>

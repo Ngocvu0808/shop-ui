@@ -1,0 +1,102 @@
+<div class="kt-portlet popup-medium">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{'SERVICE.ADD.TITLE'|translate}}</h3>
+		</div>
+	</div>
+	<div class="kt-portlet__body">
+
+		<form class="kt-form" [formGroup]="addForm">
+			<div class="form-group kt-form__group row">
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput placeholder="" formControlName="name"/>
+						<mat-error *ngIf="validateForm('name','required')">
+							{{'SERVICE.ADD.SERVICE_NAME_REQUIRED'|translate}}
+						</mat-error>
+						<mat-error *ngIf="validateForm('name','maxlength')">
+							{{'SERVICE.ADD.SERVICE_NAME_MAX_LENGTH'|translate}}
+						</mat-error>
+						<mat-hint align="start">{{'SERVICE.ADD.SERVICE_NAME'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput placeholder="" formControlName="code"/>
+						<mat-error *ngIf="validateForm('code','required')">
+							{{'SERVICE.ADD.SERVICE_CODE_REQUIRED'|translate}}
+						</mat-error>
+						<mat-error *ngIf="validateForm('code','maxlength')">
+							{{'SERVICE.ADD.SERVICE_CODE_MAX_LENGTH'|translate}}
+						</mat-error>
+						<mat-error *ngIf="validateForm('code','pattern')">
+							{{'SERVICE.ADD.CODE_PATTERN'|translate}}
+						</mat-error>
+						<mat-error *ngIf="validateForm('code','duplidate')">
+							{{'SERVICE.ADD.CODE_DUPLICATE'|translate}}
+						</mat-error>
+						<mat-hint align="start">{{'SERVICE.ADD.SERVICE_CODE'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid filter-token">
+						<mat-select (selectionChange)="onChangeData()" formControlName="system">
+							<mat-option *ngFor="let s of systems" [value]="s.id">
+								{{s.name|titlecase}}
+							</mat-option>
+						</mat-select>
+						<mat-error *ngIf="validateForm('system','required')">
+							{{'SERVICE.ADD.SYSTEM_REQUIRED'|translate}}
+						</mat-error>
+						<mat-hint align="start">{{'SERVICE.ADD.SYSTEM'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<textarea matInput rows="3" formControlName="desc"></textarea>
+						<mat-error *ngIf="validateForm('desc','maxlength')">
+							{{ 'SERVICE.ADD.DES_MAX_LENGTH' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'SERVICE.ADD.DES' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+		</form>
+		<div class="form-group kt-form__group row">
+			<div class="col-lg-12 kt-margin-bottom-20-mobile kt-margin-top-20">
+				<nz-select style="width: 100%;" nzMode="tags" nzPlaceHolder="" [(ngModel)]="tags">
+					<nz-option *ngFor="let option of listTagOptions" [nzLabel]="option.tag" [nzValue]="option.id">
+					</nz-option>
+				</nz-select>
+				<mat-hint align="start">Tag
+				</mat-hint>
+			</div>
+		</div>
+	</div>
+	<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+		<div class="kt-form__actions kt-form__actions--solid">
+			<div class="row text-right">
+				<div class="col-lg-12">
+					<button class="btn-cancel"
+							type="button"
+							mat-raised-button
+							cdkFocusInitial (click)="close()">
+						{{ 'COMMON.BTN_CANCEL' | translate }}
+					</button>&nbsp;
+					<button class="btn-save"
+							type="button"
+                            [disabled]="!addForm.dirty||!addForm.valid"
+                            [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
+							mat-raised-button
+							color="primary" (click)="save()">
+						{{ 'COMMON.BTN_SAVE' | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

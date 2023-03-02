@@ -1,0 +1,120 @@
+<kt-portlet class="main-content app-user-list">
+	<kt-portlet-header [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTitle>
+			<div class="col-md-2 kt-margin-bottom-10-mobile">
+				<div class="kt-form__control">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-select multiple [(ngModel)]="rolesFilter" #roles="ngModel" (selectionChange)="fetchData()">
+							<mat-select-trigger>
+								{{rolesFilter.length === listRoleFilter.length ? allLabel : displayRoleFilter()}}
+							</mat-select-trigger>
+							<select-check-all [model]="roles" [values]="listRoleValue" (masterSelect)="onMasterSelect($event)">
+							</select-check-all>
+							<mat-option *ngFor="let role of listRoleFilter" [value]="role.id">
+								{{role.name}}
+							</mat-option>
+						</mat-select>
+						<mat-hint align="start">{{'USER.USER_MANAGE.FILTER_BY'|translate}}
+							<strong>{{'USER.USER_MANAGE.ROLE'|translate}}</strong>
+						</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+				<mat-form-field class="mat-form-field-fluid">
+					<input matInput placeholder="{{'COMMON.SEARCH_TOOLTIP'|translate}}" [(ngModel)]="searchValue"
+						   (keyup.enter)="fetchData()">
+				</mat-form-field>
+			</div>
+			<div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+				<button mat-button color="primary" (click)="fetchData()">
+					<mat-icon>search</mat-icon>
+				</button>
+			</div>
+		</ng-container>
+		<ng-container ktPortletTools>
+			<button [hidden]="checkPermission('CLIENT_ADD_USER')" class="add-button" mat-raised-button matTooltip="" color="primary" type="button" (click)="add()">
+                <span>
+                    <mat-icon>add</mat-icon>
+					{{'APP.USER.GENERAL.ADD'|translate}}
+                </span>
+			</button>
+		</ng-container>
+	</kt-portlet-header>
+	<kt-portlet-body>
+		<div class="kt-form kt-margin-b-30">
+			<div>
+				<mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+						   class="mat-elevation-z8">
+					<ng-container matColumnDef="index">
+						<mat-header-cell *matHeaderCellDef class="col-extra-small"> {{'APP.USER.GENERAL.INDEX'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let element; let i = index;" class="col-extra-small">
+							{{ page * limit + i + 1 }}
+						</mat-cell>
+					</ng-container>
+
+					<ng-container matColumnDef="username">
+						<mat-header-cell *matHeaderCellDef mat-sort-header>
+							{{'APP.USER.GENERAL.USERNAME'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let element">
+							{{element.username}}
+						</mat-cell>
+					</ng-container>
+
+					<ng-container matColumnDef="email">
+						<mat-header-cell *matHeaderCellDef mat-sort-header>{{'APP.USER.GENERAL.EMAIL'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+					</ng-container>
+
+					<ng-container matColumnDef="name">
+						<mat-header-cell *matHeaderCellDef mat-sort-header>{{'APP.USER.GENERAL.DISPLAY_NAME'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+					</ng-container>
+
+					<ng-container matColumnDef="role">
+						<mat-header-cell *matHeaderCellDef class="justify-content-start">
+							{{'USER.USER_MANAGE.TABLE.ROLES'|translate}}</mat-header-cell>
+						<mat-cell *matCellDef="let element" class="justify-content-start box-block">
+                            <span *ngFor="let role of element.permissions" _ngcontent-dha-c15=""
+								  class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide"
+							(click)="viewRoleDetail(role.roleId)">{{role.roleName}}</span>
+						</mat-cell>
+					</ng-container>
+
+					<ng-container matColumnDef="actions">
+						<mat-header-cell *matHeaderCellDef class="col-actions-large">
+							{{'APP.USER.GENERAL.ACTIONS'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let item" class="col-actions-large">
+							<ng-container>
+								<button mat-icon-button color="primary" (click)="edit(item)">
+									<mat-icon matTooltip="{{'COMMON.VIEW_DETAIL_TOOLTIP' | translate}}">create
+									</mat-icon>
+								</button>
+							</ng-container>
+							<ng-container>
+								<button mat-icon-button color="primary" (click)="delete(item)">
+									<mat-icon class="delete" matTooltip="{{'COMMON.DELETE_TOOLTIP' | translate}}">
+										delete
+									</mat-icon>
+								</button>
+							</ng-container>
+						</mat-cell>
+					</ng-container>
+					<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+				</mat-table>
+			</div>
+            <div class="box-spiner" *ngIf='loading && dataSource.length == 0'>
+                <mat-spinner></mat-spinner>
+            </div>
+            <div class="no-record" *ngIf="!loading && dataSource.length==0">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+		</div>
+	</kt-portlet-body>
+</kt-portlet>

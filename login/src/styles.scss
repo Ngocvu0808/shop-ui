@@ -1,0 +1,721 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~material-design-icons/iconfont/material-icons.css";
+@import "~highlight.js/styles/googlecode.css";
+
+// hide bootstrap dropdown arrow globally
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+.mat-table__wrapper--dashboard .mat-table {
+    min-width: 600px !important;
+    width    : 100% !important;
+}
+
+.position-static {
+    position: static;
+}
+
+// Custom css
+.kt-margin-bottom-20-mobile {
+    margin-bottom: 25px;
+}
+
+.add-measure-index {
+    font-weight: bold;
+    display    : block;
+    width      : 100%;
+}
+
+.icon-close-popup {
+    margin-top : 20px;
+    color      : red;
+    font-weight: bold;
+}
+
+.text-disabled {
+    width     : 100%;
+    height    : 51px;
+    background: #eee;
+    padding   : 10px;
+}
+
+.kt-grid__item.kt-grid__item--fluid {
+    width        : 100% !important;
+    padding-left : 0 !important;
+    padding-right: 0 !important;
+}
+
+.box-title-campaing {
+    padding: 20px;
+
+    .icon-back {
+        cursor: pointer;
+    }
+
+    .box-title {
+        padding    : 0px 50px;
+        padding-top: 30px;
+    }
+}
+
+.box-date-edit {
+    .edit-icon {
+        display : none;
+        position: absolute;
+        bottom  : 14px;
+        right   : 47px;
+        cursor  : pointer;
+    }
+
+    &:hover {
+        .edit-icon {
+            display: inline-block;
+        }
+    }
+}
+
+.group-campaign {
+    padding         : 0px 50px;
+    background-color: #fff;
+    height          : calc(100% - 136px);
+}
+
+.kt-demo-panel {
+    top       : 80px !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.kt-demo-panel {
+    padding: 0 !important;
+    width  : 450px !important;
+
+    .kt-margin-bottom-20-mobile {
+        margin-bottom: 15px;
+    }
+
+    .kt-demo-panel__head {
+        padding       : 20px;
+        margin-bottom : 0 !important;
+        padding-bottom: 20px;
+    }
+
+    .kt-portlet__body {
+        padding-top: 0 !important;
+    }
+
+    .campaign-label {
+        font-weight  : bold;
+        padding-right: 10px;
+        margin-bottom: 0;
+    }
+
+    .campaign-detail {
+        background: #ccc;
+        display   : block;
+        width     : 100%;
+        margin    : 0;
+        padding   : 5px 10px;
+        height    : 29px;
+
+        &.link-copy {
+            position     : relative;
+            padding-right: 87px;
+            overflow     : hidden;
+            text-overflow: ellipsis;
+
+            .box-link-copy {
+                position    : absolute;
+                display     : inline-block;
+                width       : 62px;
+                height      : 100%;
+                right       : 0;
+                top         : 0;
+                background  : #aaa;
+                padding-left: 10px;
+
+                a {
+                    display: inline-block;
+                    height : 100%;
+                    cursor : pointer;
+
+                    .mat-icon {
+                        display    : inline-block;
+                        height     : 100%;
+                        padding-top: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    .kt-demo-panel__close {
+        cursor: pointer;
+    }
+
+    .col-lg-3,
+    .col-lg-9 {
+        padding: 0;
+    }
+
+    .flaticon2-delete {
+        cursor: pointer;
+    }
+}
+
+.text-disabled {
+    background: #ccc !important;
+    padding   : 10px !important;
+}
+
+.add-button {
+    position    : relative;
+    padding-left: 30px !important;
+
+    .mat-icon {
+        position: absolute;
+        top     : 11px;
+        left    : 7px;
+    }
+}
+
+.campaign-add-user {
+    .example-section {
+        .example-margin {
+            display: block;
+        }
+    }
+}
+
+.input-disabled {
+    background: #c4c5d6 !important;
+    padding   : 10px !important;
+    color     : #646c9a !important;
+}
+
+.input-disabled+.hidden-disabled {
+    display: none;
+}
+
+.user-group-tag,
+.user-role-tag {
+    padding      : 0px 10px;
+    background   : #591df1 !important;
+    height       : 24px;
+    border-radius: 12px;
+    line-height  : 24px;
+    color        : #fff;
+    font-size    : 0.8rem;
+    min-width    : 50px;
+    text-align   : center;
+    display      : inline-block;
+}
+
+.group-user-setting {
+    position  : relative;
+    min-height: 50px;
+
+    .box-user-setting {
+        float: right;
+
+        .button-setting {
+            background: #ccc;
+        }
+    }
+}
+
+.user-edit {
+    .box-role-check {
+        .role-check {
+            display: block;
+        }
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+}
+
+//user detail
+.group-user-detail {
+    padding   : 20px;
+    max-width : 1140px;
+    margin    : auto;
+    background: #fff;
+    height    : calc(100vh - 155px);
+    box-shadow: 0px 0px 13px 0px rgba(82, 63, 105, 0.05);
+
+    .icon-back {
+        cursor: pointer;
+    }
+
+    .box-user-info {
+        padding: 20px;
+
+        .group-avatar {
+            .box-avatar {
+                img {
+                    border-radius: 50%;
+                    width        : 100px;
+                    height       : 100px;
+                }
+
+                .text-avatar {
+                    font-size    : 50px;
+                    text-align   : center;
+                    background   : #ccc;
+                    height       : 100px;
+                    line-height  : 100px;
+                    width        : 100px;
+                    border-radius: 100%;
+                }
+            }
+
+            .box-avatar-info {
+                .user-full-name {
+                    text-transform: uppercase;
+                    font-size     : 20px;
+                }
+            }
+        }
+    }
+
+    .box-user-info-detail {
+        padding: 10px 30px;
+
+        .user-title {
+            font-weight: bold;
+            display    : inline-block;
+
+            &.title-block {
+                display: block;
+            }
+        }
+
+        .box-intro {
+            border-right: 1px solid #ccc;
+
+            .user-info-detail {
+                .user-label {
+                    display    : inline-block;
+                    width      : 150px;
+                    font-weight: 500;
+                }
+
+                .user-info-content {
+                    display: inline-block;
+                }
+
+            }
+
+
+            .role-tag,
+            .group-tag,
+            .campaign-tag,
+            .campaign-role-tag {
+                background   : #1dc9b7;
+                height       : 30px;
+                line-height  : 30px;
+                padding      : 0px 10px;
+                border-radius: 10px;
+                margin-left  : 10px;
+                color        : #fff;
+            }
+
+            .group-tag {
+                background: #1db1c9;
+            }
+
+            .campaign-tag {
+                background: #1491a5;
+            }
+
+            .campaign-role-tag {
+                background: #1470a5;
+            }
+        }
+
+        .box-actions {
+            .user-action-detail {
+                .user-label {
+                    display    : inline-block;
+                    width      : 150px;
+                    font-weight: 500;
+                }
+            }
+
+            .box-see-more {
+                margin-top: 20px;
+            }
+        }
+    }
+}
+
+.user-edit {
+    .group-avatar {
+        .box-avatar {
+            img {
+                border-radius: 50%;
+                width        : 100px;
+                height       : 100px;
+            }
+
+            .text-avatar {
+                font-size    : 50px;
+                text-align   : center;
+                background   : #ccc;
+                height       : 100px;
+                line-height  : 100px;
+                width        : 100px;
+                border-radius: 100%;
+            }
+        }
+
+        .box-avatar-info {
+            p {
+                margin-bottom: 5px;
+            }
+
+            .user-full-name {
+                text-transform: uppercase;
+                font-size     : 16px;
+                margin-bottom : 5px;
+            }
+        }
+    }
+}
+
+.group-user-edit {
+    .box-role-check {
+        .role-check {
+            display: block;
+        }
+    }
+}
+
+.group-user-detail {
+    .box-user-info-detail {
+        .box-group-user {
+            padding-right: 20px;
+
+            .box-user-actions {
+                width     : 100%;
+                margin-top: 15px;
+
+                .box-avatar {
+                    img {
+                        width        : 60px;
+                        height       : 60px;
+                        border-radius: 60px;
+                    }
+                }
+
+                .box-avatar-info {
+                    position: relative;
+
+                    .user-full-name {
+                        margin-bottom: 5px;
+                        font-weight  : 500;
+                    }
+
+                    .user-name {
+                        margin-bottom: 3px;
+                    }
+
+                    .more-actions {
+                        position: absolute;
+                        right   : 0px;
+                        top     : 20px;
+                    }
+                }
+            }
+        }
+
+        .box-group-user-actions {
+            padding: 17px;
+
+            .show-user-list {
+                margin-bottom: 20px;
+                margin-top   : 20px;
+            }
+
+            .group-user-check {
+                width: 100%;
+            }
+
+            .action-line {
+                .action-title {
+                    font-weight: 500;
+                    width      : 140px;
+                    display    : inline-block;
+                    text-align : right;
+                }
+
+                .action-content {
+                    display    : inline-block;
+                    margin-left: 10px;
+                }
+
+                .user-role-tag {
+                    margin-left: 10px;
+                }
+            }
+
+            .actions-title {
+                font-weight: bold;
+                margin-top : 20px;
+            }
+        }
+    }
+}
+
+.box-role-check {
+    .role-check {
+        margin-top: 10px;
+    }
+
+    .box-role-sub {
+        padding-left: 25px;
+
+        .role-check {
+            display: block;
+        }
+    }
+}
+
+.user-add-to-group {
+    .kt-form__filtration {
+        margin-bottom : 10px;
+        border-bottom : 1px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    .kt-form__actions {
+        padding         : 20px !important;
+        background-color: #f7f8fa;
+        border-color    : #f7f8fa;
+    }
+}
+
+//base css
+.mr-top10 {
+    margin-top: 10px;
+}
+
+.mr-top15 {
+    margin-top: 15px;
+}
+
+.mr-top20 {
+    margin-top: 20px;
+}
+
+.deactive-label {
+    display: none;
+}
+
+.disabled-input {
+    .active-label {
+        display: none;
+    }
+
+    input {
+        background: #c4c5d6 !important;
+        padding   : 10px !important;
+        color     : #646c9a !important;
+    }
+
+    .mat-form-field-label,
+    .mat-form-field-underline {
+        display: none !important;
+    }
+
+    .deactive-label {
+        display: block;
+    }
+}
+
+.box-link {
+    padding-top : 8px;
+    padding-left: 10px;
+
+    .link-copy {
+        cursor: pointer;
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.mat-paginator {
+    margin-top: 20px !important;
+}
+
+.hidden {
+    display: none;
+}
+
+.mat-cell {
+    padding: 5px;
+
+    .wrap-content {
+        width        : calc(100% - 40px);
+        white-space  : nowrap;
+        overflow     : hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.icon-copy {
+    color: rgba(0, 0, 0, .87);
+}
+
+.icon-delete {
+    color: rgba(0, 0, 0, .26);
+
+    &.active {
+        color: #dc3545;
+    }
+}
+
+.status-active {
+    background: #28a745 !important;
+    color     : #fff !important;
+}
+
+.status-pending {
+    background: #ffc107 !important;
+}
+
+.status-deactive {
+    background: #dc3545 !important;
+    color     : #fff !important;
+}
+
+//end base css
+
+// customer popup width
+.popup-small {
+    width: 450px !important;
+}
+
+.popup-medium {
+    width: 600px !important;
+}
+
+.popup-large {
+    width: 800px !important;
+}
+
+// En customer popup width
+
+
+// api loading
+.api-loading {
+    display        : flex !important;
+    justify-content: center !important;
+    align-items    : center !important;
+}
+
+.basic.modal {
+    z-index: 97 !important
+}
+
+.break-word {
+    word-wrap: break-word;
+}
+
+.expired-element {
+    color: #dc3545 !important;
+}
+
+.kt-portlet {
+    form {
+        .mat-raised-button {
+            min-width  : 80px;
+            margin-left: 15px;
+        }
+    }
+
+    .btn-cancel {
+        background: #ff6161;
+        color     : #fff;
+    }
+
+    .kt-portlet__head {
+        padding: 0px 20px;
+    }
+
+    .kt-form__actions {
+        padding: 20px;
+    }
+}
+
+.error-msg {
+    font-size  : 70%;
+    font-weight: 400;
+    line-height: 1.125;
+}
+
+.no-record {
+    padding   : 20px;
+    text-align: center;
+}
+
+.form-login {
+    border: 1px solid;
+
+    .form-field {
+        padding: 20px;
+    }
+}
+
+//auth login
+.kt-login__wrapper {
+    padding         : 0 !important;
+    background-color: #ced5e2 !important;
+}
+
+.kt-login__form {
+    background-color: #FFFFFF;
+    border-radius   : 3px;
+    padding         : 25px 40px;
+    box-shadow      : rgba(0, 0, 0, 0.1) 0 0 10px;
+    border          : 0;
+
+    @media only screen and (min-width: 900px) {
+        .layout-twothirds-center {
+            display  : block;
+            max-width: 585px;
+            margin   : 0 auto;
+            position : relative;
+        }
+    }
+
+    .kt-login__title {
+        margin-bottom: 0 !important;
+    }
+
+    .kt-form {
+        margin: 0 !important;
+    }
+
+    .kt-login__btn-primary {
+        min-width: 200px;
+    }
+}
+
+.kt-login__options {
+    a {
+        color: #fff !important;
+
+        i {
+            color: #fff;
+        }
+    }
+}
+
+//end auth login

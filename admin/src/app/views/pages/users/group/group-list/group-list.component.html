@@ -1,0 +1,160 @@
+<kt-portlet class="main-content">
+    <h1></h1>
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTitle>
+            <h3 class="kt-portlet__head-title">
+                <span>{{'GROUP.GENERAL.TITLE'|translate}}</span>
+            </h3>
+        </ng-container>
+        <ng-container ktPortletTools>
+            <button class="add-button"
+                    color="primary"
+                    type="button"
+                    mat-raised-button
+                    [disabled]="checkPermission('GROUP_ADD')"
+                    [hidden]="checkPermission('GROUP_ADD')"
+                    (click)="addGroup()">
+				<span>
+					<mat-icon>add</mat-icon>
+                    {{'GROUP.GENERAL.ADD'|translate}}
+				</span>
+            </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="kt-form kt-margin-b-30">
+            <!-- start::FILTERS -->
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select multiple
+                                            [(ngModel)]="roleValue"
+                                            #roles="ngModel"
+                                            (selectionChange)="search()">
+                                    <mat-select-trigger>
+                                        {{roleValue.length === listRoleFilter.length ? allLabel : displayRoleFilter()}}
+                                    </mat-select-trigger>
+                                    <select-check-all [model]="roles" [values]="listRoleValue"
+                                                      (masterSelect)="onMasterRoleSelectChange($event)">
+                                    </select-check-all>
+                                    <mat-option *ngFor="let role of listRoleFilter" [value]="role.id">
+                                        {{role.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{'GROUP.GENERAL.FILTER_BY'|translate}}
+                                    <strong>{{'GROUP.GENERAL.ROLE'|translate}}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput
+                                   placeholder="{{'GROUP.GENERAL.SEARCH'|translate}}"
+                                   [(ngModel)]="searchValue">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+                        <button mat-button color="primary" (click)="search()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- end::FILTERS -->
+            <div class="box-table">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+                           class="mat-elevation-z8">
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef
+                                         class="justify-content-start"> {{'GROUP.GENERAL.INDEX'|translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;" class="justify-content-start">
+                            {{page * limit + i + 1}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'GROUP.GENERAL.GROUP_NAME'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="code">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'GROUP.GENERAL.GROUP_ID'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.code}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="roles">
+                        <mat-header-cell *matHeaderCellDef> {{'GROUP.GENERAL.ROLE'|translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="box-block">
+							<span class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide"
+                                  _ngcontent-dha-c15=""
+                                  [hidden]="checkPermission('GROUP_GET_ALL_ROLE')"
+                                  (click)="viewRoleDetail(role.id)"
+                                  *ngFor="let role of element.roles">{{role.name}}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numberUser">
+                        <mat-header-cell *matHeaderCellDef class="justify-content-center"> {{'GROUP.GENERAL.NUMBER_MEMBER'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="justify-content-center">
+                            <span>{{element.numberMember}}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdTime">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'GROUP.GENERAL.CREATED_TIME'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span>{{element.createdTime | date: 'dd/MM/yyyy hh:mm a'}}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef> {{'GROUP.GENERAL.ACTIONS'|translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <ng-container>
+                                <button mat-icon-button color="primary" (click)="viewGroup(element)"
+                                        [disabled]="checkPermission('GROUP_GET_BY_ID')"
+                                        [hidden]="checkPermission('GROUP_GET_BY_ID')">
+                                    <mat-icon>remove_red_eye</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button color="primary" (click)="editGroup(element)"
+                                        [disabled]="checkPermission('GROUP_UPDATE')"
+                                        [hidden]="checkPermission('GROUP_UPDATE')">
+                                    <mat-icon>create</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button color="primary" (click)="deleteGroup(element)"
+                                        [disabled]="checkPermission('GROUP_DELETE')"
+                                        [hidden]="checkPermission('GROUP_DELETE')">
+                                    <mat-icon class="delete">delete</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <div class="no-record" *ngIf="dataSource.length==0 && this.canAccess == true">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+            <div class="no-record access-noti" *ngIf="dataSource.length==0 && this.canAccess == false">
+                <p>{{'COMMON.FORBIDDEN' | translate}}</p>
+            </div>
+            <mat-paginator [pageSize]="limit"
+                           [pageSizeOptions]="pageSizeOption"
+                           [length]="totalElement"
+                           [pageIndex]="page"
+                           [showFirstLastButtons]="true"
+                           (page)="pageChange($event)">
+            </mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

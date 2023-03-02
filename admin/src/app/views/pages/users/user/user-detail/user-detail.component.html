@@ -1,0 +1,132 @@
+<div class="group-user-detail">
+	<mat-icon class="icon-back" (click)="back()">arrow_back_ios</mat-icon>
+	{{'USER.DETAIL.TITLE'|translate}}
+	<div class="row box-user-info">
+		<div class="col-lg-8">
+			<div class="row group-avatar">
+				<div class="col-lg-2 box-avatar">
+					<img src="../../../../../../assets/media/users/100_11.jpg" alt="">
+				</div>
+				<div class="col-lg-10 box-avatar-info">
+					<p class="user-full-name">{{userData.name}}</p>
+					<p class="user-name">{{userData.username}}</p>
+					<p class="user-email">{{userData.email}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row box-user-info-detail">
+		<div class="col-lg-6 box-intro-scroll">
+			<div class="box-intro">
+				<p class="user-title mr-top15">{{'USER.DETAIL.ABOUT'|translate}}</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.FULL_NAME'|translate}}</span>
+					<span class="user-info-content">{{userData.name}}</span>
+				</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.DISPLAY_NAME'|translate}}</span>
+					<span class="user-info-content">{{userDetail ? userDetail.fullName : userData.name}}</span>
+				</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.USERNAME'|translate}}</span>
+					<span class="user-info-content">{{userData.username}}</span>
+				</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.EMAIL'|translate}}</span>
+					<span class="user-info-content">{{userDetail ? userDetail.email : userData.email}}</span>
+				</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.PHONE'|translate}}</span>
+					<span
+						class="user-info-content">{{userDetail ? userDetail.phoneNumber : ''}}</span>
+				</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.GENDER'|translate}}</span>
+					<span class="user-info-content">{{userDetail ? userDetail.gender : ''}}</span>
+				</p>
+				<p class="user-info-detail">
+					<span class="user-label">{{'USER.DETAIL.BIRTH_DATE'|translate}}</span>
+					<span class="user-info-content">{{userDetail ? userDetail.birthDate : ''}}</span>
+				</p>
+				<div class="mr-top15">
+					<p class="user-title">{{'USER.DETAIL.ROLES'|translate}}</p>
+					<span class="role-tag link-cursor"
+						  *ngFor="let role of roles"
+						  (click)="viewRoleDetail(role.id)">{{role.name}}</span>
+				</div>
+				<div class="mr-top15">
+					<p class="user-title">{{'USER.DETAIL.GROUPS'|translate}}</p>
+					<span class="group-tag link-cursor"
+						  *ngFor="let group of groups"
+						  (click)="viewGroupDetail(group.id)">{{group.name}}</span>
+				</div>
+				<!--				<div class="row mr-top15">-->
+				<!--					<div class="col-lg-6">-->
+				<!--						<p class="user-title title-block">{{'USER.DETAIL.CAMPAIGN'|translate}}</p>-->
+				<!--					</div>-->
+				<!--					<div class="col-lg-6">-->
+				<!--						<p class="user-title title-block">{{'USER.DETAIL.CAMPAIGN_ROLE'|translate}}</p>-->
+				<!--					</div>-->
+				<!--				</div>-->
+				<!--				<div class="row" *ngFor="let cp of applications">-->
+				<!--					<div class="col-lg-6 pl-0">-->
+				<!--						<span (click)="viewCampaignDetail(cp.id)"-->
+				<!--							  class="campaign-tag tag-block link-cursor">{{cp.name}}</span>-->
+				<!--						<br>-->
+				<!--					</div>-->
+				<!--					<div class="col-lg-6 pl-0">-->
+				<!--						<span class="campaign-role-tag tag-block link-cursor"-->
+				<!--							  *ngFor="let role of cp.roles"-->
+				<!--							  (click)="viewRoleDetail(role.id)">{{role.name}}</span>-->
+				<!--					</div>-->
+				<!--				</div>-->
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="box-actions box-gen-key" *ngIf="isCurrentUser">
+				<p class="user-title mr-top15">{{'USER.DETAIL.API_KEY_LABEL'|translate}}</p>
+				<ng-container buttonGetAPIKey *ngIf="genKeyEnable">
+					<button class="add-button ml-5"
+							mat-raised-button
+							color="primary"
+							type="button"
+							[hidden]="checkPermission('DEVELOPER')"
+							[disabled]="checkPermission('DEVELOPER')"
+							(click)="getAPIKey()">
+						{{'USER.DETAIL.API_KEY_GENERATE'|translate}}
+					</button>
+				</ng-container>
+				<ng-container *ngIf="!genKeyEnable">
+					<input matInput class="ml-5" type="password" value="{{apiKey}}" readonly disabled autofocus>
+					<button mat-icon-button
+							color="primary"
+							matTooltip="copy"
+							(click)="copyMessage(apiKey)">
+						<mat-icon>
+							library_books
+						</mat-icon>
+					</button>
+					<button mat-icon-button
+							color="primary"
+							(click)="reloadAPIKey()"
+							[hidden]="checkPermission('USER_RELOAD_API_KEY')"
+							[disabled]="checkPermission('USER_RELOAD_API_KEY')"
+							matTooltip="reload">
+						<mat-icon>
+							autorenew
+						</mat-icon>
+					</button>
+				</ng-container>
+			</div>
+			<!--			<div class="box-actions">-->
+			<!--				<p class="user-title">{{'USER.DETAIL.ACTIVITY'|translate}}</p>-->
+			<!--				<p class="box-see-more text-center">-->
+			<!--					<button mat-stroked-button>{{'USER.DETAIL.LOAD_MORE'|translate}}</button>-->
+			<!--				</p>-->
+			<!--			</div>-->
+		</div>
+	</div>
+	<div class="row" [hidden]="checkPermission('DEVELOPER')">
+		<tokens-list></tokens-list>
+	</div>
+</div>

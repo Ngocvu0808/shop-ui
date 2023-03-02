@@ -1,0 +1,142 @@
+<div class="group-user-detail main-content content-full">
+	<mat-icon class="icon-back" (click)="back()">arrow_back_ios</mat-icon>
+	{{'GROUP.DETAIL.TITLE'|translate}}
+	<div class="row box-user-info">
+		<div class="col-lg-8">
+			<div class="row group-avatar">
+				<div class="col-lg-2 box-avatar">
+					<img src="../../../../../../assets/media/users/100_11.jpg" alt="">
+				</div>
+				<div class="col-lg-8 box-avatar-info">
+					<p class="user-full-name">{{groupData.name}}</p>
+					<p class="user-name">{{groupData.code}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row box-user-info-detail">
+		<div class="col-lg-6 box-intro-scroll">
+			<div class="row box-intro box-group-user">
+				<div class="col-md-9 kt-margin-bottom-10-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<label>
+							<input matInput
+								   placeholder="{{'COMMON.SEARCH_TOOLTIP'|translate}}"
+								   [(ngModel)]="inputSearch"
+								   (input)="search()"
+							>
+						</label>
+					</mat-form-field>
+				</div>
+				<div class="col-md-3 kt-margin-bottom-10-mobile">
+					<button mat-button color="primary" (click)="search()">
+						<mat-icon>search</mat-icon>
+					</button>
+				</div>
+				<div class="col-md-12">
+					<mat-card *ngFor="let user of groupUserResult" class="box-user-actions">
+						<div class="row">
+							<div class="col-md-2">
+								<div class="col-lg-2 box-avatar">
+									<img src="../../../../../../assets/media/users/100_11.jpg" alt="">
+								</div>
+							</div>
+							<div class="col-md-10">
+								<div class="col-lg-12 box-avatar-info">
+									<p class="user-full-name"
+									   [hidden]="checkPermission('GROUP_ADD_USER')"
+									   (click)="viewUserDetail(user.id)">{{user ? user.name : ''}}</p>
+									<p class="user-name">{{user ? user.userName : ''}}</p>
+									<p class="user-name">{{user ? user.email : ''}}</p>
+									<button class="more-actions" mat-icon-button [matMenuTriggerFor]="menuUserAction"
+											aria-label="">
+										<mat-icon>more_vert</mat-icon>
+									</button>
+									<mat-menu #menuUserAction="matMenu">
+										<button mat-menu-item (click)="deleteUser(user)"
+												[disabled]="checkPermission('GROUP_DELETE_USER')"
+												[hidden]="checkPermission('GROUP_DELETE_USER')">
+											<span>{{'GROUP.DETAIL.DELETE_USER'|translate}}</span>
+										</button>
+									</mat-menu>
+								</div>
+							</div>
+						</div>
+					</mat-card>
+					<div *ngIf="groupUsers.length == 0" class="no-user">
+						<p>{{'GROUP.DETAIL.NO_USER'|translate}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 box-intro-scroll">
+			<div class="row box-actions box-group-user-actions">
+				<div class="col-md-9 kt-margin-bottom-10-mobile">
+					<mat-form-field>
+						<mat-chip-list #chipList>
+							<mat-chip
+								*ngFor="let user of users"
+								[selectable]="selectable"
+								[removable]="removable"
+								(removed)="remove(user)">
+								{{user.name}}
+								<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+							</mat-chip>
+							<input
+								placeholder="{{'GROUP.DETAIL.ADD_USER_MAT_CHIP'|translate}}"
+								#userInput
+								[(ngModel)]="searchUser"
+								[formControl]="userCtrl"
+								[matAutocomplete]="auto"
+								[matChipInputFor]="chipList"
+								[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+								(matChipInputTokenEnd)="add($event)"
+								(input)="change()"
+							>
+						</mat-chip-list>
+						<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+							<mat-option *ngFor="let user of filteredUsers" [value]="user">
+								{{user.name}}
+							</mat-option>
+						</mat-autocomplete>
+					</mat-form-field>
+				</div>
+				<div class="col-md-3 kt-margin-bottom-10-mobile">
+					<button mat-button
+							color="primary"
+							[disabled]="checkPermission('GROUP_ADD_USER')"
+							[hidden]="checkPermission('GROUP_ADD_USER')"
+							(click)="addUserToGroup()">
+						<mat-icon>library_add</mat-icon>
+					</button>
+				</div>
+				<div class="col-md-12">
+					<p class="text-center">
+						<button mat-stroked-button
+								class="show-user-list"
+								[disabled]="checkPermission('GROUP_GET_ALL_USER')"
+								[hidden]="checkPermission('GROUP_GET_ALL_USER')"
+								(click)="showUserList(groupId)">{{'GROUP.DETAIL.VIEW_ALL_USER'|translate}}</button>
+					</p>
+					<p class="action-line">
+						<span class="action-title">{{'GROUP.DETAIL.NUMBER_MEMBER'|translate}}</span>
+						<span class="action-content">{{groupData.numberMember}}</span>
+					</p>
+					<p class="action-line">
+						<span class="action-title">Vai trò nhóm: </span>
+						<span class="user-role-tag link-cursor"
+							  [hidden]="checkPermission('ROLE_GET_BY_ID')"
+							  *ngFor="let role of groupRoles"
+							  (click)="viewRoleDetail(role.id)">{{role.name}}</span>
+						<span *ngIf="groupRoles.length == 0"
+							  class="user-role-no-tag action-content"> {{'GROUP.DETAIL.NO_ROLE'|translate}}</span>
+					</p>
+					<p class="actions-title">{{'GROUP.DETAIL.GROUP_ACTIONS'|translate}}</p>
+					<p class="text-center">
+						<button mat-stroked-button>{{'GROUP.DETAIL.VIEW_MORE'|translate}}</button>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

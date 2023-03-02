@@ -1,0 +1,163 @@
+<kt-portlet class="main-content">
+    <h1></h1>
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTitle>
+            <h3 class="kt-portlet__head-title">
+                <span>{{ 'TRADING.CART_INFO' | translate }}</span>
+            </h3>
+        </ng-container>
+
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="kt-form kt-margin-b-30">
+            <!-- start::FILTERS -->
+            <div class="kt-form__filtration cover">
+                <div class="row align-items-center">
+<!--                    <div class="col-md-4 kt-margin-bottom-10-mobile">-->
+<!--                        <div class="kt-form__control">-->
+<!--                            <mat-form-field class="full-width">-->
+<!--                                <mat-label></mat-label>-->
+<!--                                <input matInput placeholder="dd/MM/yyyy" [matDatepicker]="fromPicker" [(ngModel)]="fromDate"-->
+<!--                                       [min]="minDate" (dateInput)="validateFromDate('input',$event)"-->
+<!--                                       (dateChange)="validateFromDate('change',$event)" (ngModelChange)="fetchData()">-->
+<!--                                <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>-->
+<!--                                <mat-datepicker #fromPicker disabled="false"></mat-datepicker>-->
+<!--                                <mat-hint align="start">{{'APP.LOG_HISTORY.FROM_DATE'|translate}}</mat-hint>-->
+<!--                                <mat-error *ngIf="fromDateInvalid">{{fromDateInvalidMsg}}</mat-error>-->
+<!--                            </mat-form-field>-->
+<!--                            <div class="error-field" *ngIf="!fromDateInvalid&&!checkValidFromDate(fromDate)">-->
+<!--                                {{getMsgValidateFromDate(fromDate)}}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="col-md-4 kt-margin-bottom-10-mobile cover2">
+                        <div class="kt-form__control">
+<!--                            <mat-form-field class="mat-form-field-fluid">-->
+<!--                                <input matInput placeholder="{{ 'TRADING.TYPE' | translate }}"-->
+<!--                                       [(ngModel)]="tradingType" />-->
+<!--                            </mat-form-field>-->
+                            <mat-form-field class="mat-form-field-fluid">
+<!--                                <input matInput placeholder="{{ 'TRADING.TYPE' | translate }} [(ngModel)]="tradingType" />-->
+                                <mat-select (selectionChange)="onSelectChange($event)" [(ngModel)]="tradingType">
+                                    <mat-option value="BUYING">
+                                        MUA
+                                    </mat-option>
+                                    <mat-option value="SELLING">
+                                        BÁN
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{ 'Loại giao dịch' | translate }}
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-4 kt-margin-bottom-10-mobile cover2">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput placeholder="{{ 'TRADING.CUS_INFO' | translate }}"
+                                       [(ngModel)]="customerName" (keyup.enter)="search()" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile cover2">
+                        <button class="add-button" mat-raised-button color="primary" type="button"
+                                (click)="addProduct()">
+                <span>
+                    <mat-icon>add</mat-icon>
+                    {{ 'TRADING.CART_ADD_PRODUCT' | translate }}
+                </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- end::FILTERS -->
+                <div class="box-table">
+                    <mat-table class="mat-elevation-z8" matSort [dataSource]="users" (matSortChange)="onSortChange($event)">
+                        <ng-container matColumnDef="select">
+                            <mat-header-cell *matHeaderCellDef class="mat-column-checkbox">
+                                <mat-checkbox [checked]="isCheckAll" [color]="'primary'">
+                                </mat-checkbox>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" class="mat-column-checkbox">
+                                <mat-checkbox [checked]="isChecked(row)" [color]="'primary'"
+                                              (click)="$event.stopPropagation()">
+                                </mat-checkbox>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="name">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="justify-content-start">
+                                {{ 'PRODUCT.NAME' | translate }}
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="justify-content-start">
+                                {{ element.name }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="code">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="justify-content-start">
+                                {{ 'PRODUCT.CODE' | translate }}</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="justify-content-start">
+                                {{ element.code }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sellPrice">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="justify-content-start">
+                                {{ 'PRODUCT.SELL_PRICE' | translate }}</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="justify-content-start">
+                                {{ element.sellPrice }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="type">
+                            <mat-header-cell *matHeaderCellDef class="justify-content-start">
+                                {{ 'PRODUCT.TYPE' | translate }}</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="justify-content-start">
+                                {{ element.type }}
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="amount">
+                            <mat-header-cell *matHeaderCellDef class="justify-content-center">
+                                {{ 'TRADING.AMOUNT' | translate }}</mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="justify-content-center">
+                                <ng-container>
+                                    <div class="input-group bootstrap-touchspin cover3">
+                                        <input class="amount-form" matInput [(ngModel)]="element.amount" (keyup.enter)="clickPlus(element)"/>
+                                    </div>
+                                </ng-container>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    </mat-table>
+                </div>
+
+
+
+                <div class="row align-items-center cover2">
+<!--                        <mat-form-field class="mat-form-field-fluid">-->
+<!--                            <input matInput placeholder="{{ 'COMMON.SEARCH_TOOLTIP' | translate }}"-->
+<!--                                   [(ngModel)]="toDate" (keyup.enter)="search()" />-->
+<!--                        </mat-form-field>-->
+                    <div class="col-md-6 col-sm-6 col-6 kt-margin-bottom-10-mobile">
+<!--                        <button mat-button color="primary" (click)="search()">-->
+<!--                            <mat-icon>search</mat-icon>-->
+<!--                        </button>-->
+                        <h5>Tổng giá trị:   {{billValue}}</h5>
+                    </div>
+                </div>
+                <div class="row col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile cover2 fund">
+                    <button class="add-button" mat-raised-button color="primary" type="button"
+                            (click)="checkOut()">
+                <span>
+                    <mat-icon>send</mat-icon>
+                    {{ 'TRADING.DONE' | translate }}
+                </span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

@@ -1,0 +1,35 @@
+// màu brand
+$primary-color: #1890ff;
+
+// màu thông báo lỗi
+$error-color: #dc3545;
+// màu chữ 
+$disable-color: #bababa;
+// màu text thường
+$text-normal: rgba(0,0,0,.87);
+// màu text label
+$text-label: rgba(0,0,0,.54);
+
+// màu icon thông thường
+$icon-normal: rgba(0,0,0,.69);
+// màu icon disabled
+$icon-disabled: rgba(0,0,0,.26);
+// màu nền input disabled
+$disable-bg: rgba(0,0,0,.1);
+
+// màu icon play
+$play-color: #0975ba;
+// màu icon pause
+$pause-color: #ffb822;
+
+// màu nền status active
+$active-color: #51a351;
+// màu nền status deactive
+$deactive-color: #ffb822;
+// màu nền status pending
+$pending-color: #bababa;
+// màu nền status reject, expired
+$expired-color: #ff6161;
+
+// thời gian chuyển css
+$transition   : .3s;

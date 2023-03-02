@@ -1,0 +1,96 @@
+<kt-portlet class="main-content app-user-list">
+    <kt-portlet-body>
+        <div>
+            <h3>{{'APP.API_KEY.TITLE'|translate}}</h3>
+        </div>
+        <div class="kt-form kt-margin-b-30">
+            <div>
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+                    class="mat-elevation-z8">
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell *matHeaderCellDef class="col-extra-small"> {{'APP.GENERAL.INDEX'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;" class="col-extra-small">
+                            {{ i + 1 }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="apiKey">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-large">
+                            {{'APP.API_KEY.API_KEY'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="col-large">
+                            {{element.apiKey}}
+                            <button mat-icon-button color="primary" [hidden]="element.status!='ACTIVE'"
+                                (click)="copyApiKey(element.apiKey)">
+                                <mat-icon matTooltip="Delete">
+                                    library_books
+                                </mat-icon>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.API_KEY.CREATED_AT'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.createdTime| date: 'dd/MM/yyyy hh:mm a'}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createBy">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-small">
+                            {{'APP.API_KEY.CREATE_BY'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="col-small"> {{element.creatorName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-small">
+                            {{'APP.API_KEY.STATUS'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="col-small">
+                            <span
+                                class="kt-badge kt-badge--inline kt-badge--pill {{ getItemCssClassByStatus(element.status) }} kt-badge--wide">{{ element.status }}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef class="col-actions-large">
+                            {{'APP.API_KEY.ACTION'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let item" class="col-actions-large">
+                            <ng-container>
+                                <!-- <button mat-icon-button [hidden]="item.status!='ACTIVE'" (click)="createNew(item)">
+                                    <mat-icon matTooltip="Create new">
+                                        cached
+                                    </mat-icon>
+                                </button> -->
+                                <button class="icon-delete active" mat-icon-button [hidden]="item.status!='ACTIVE'"
+                                    (click)="cancel(item)">
+                                    <mat-icon matTooltip="Disconnect">
+                                        close
+                                    </mat-icon>
+                                </button>
+                                <button mat-icon-button color="warn" [hidden]="item.status=='ACTIVE'"
+                                    (click)="delete(item)">
+                                    <mat-icon matTooltip="Delete">
+                                        delete
+                                    </mat-icon>
+                                </button>
+                            </ng-container>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <div class="no-record" *ngIf="dataSource.length==0">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+            <mat-paginator [pageSize]="limit" [pageSizeOptions]="pageSizeOption" [length]="totalElement"
+                [pageIndex]="page" [showFirstLastButtons]="true" (page)="onPageChange($event)">
+            </mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

@@ -1,0 +1,128 @@
+<div class="kt-portlet role-edit popup-medium">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'ROLE.ADD.TITLE' | translate }}</h3>
+        </div>
+    </div>
+    <form [formGroup]="roleForm" class="kt-form">
+        <div class="kt-portlet__body">
+            <div class="form-group kt-form__group row">
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid" id="isSpaceString ? 'has-error' : '' ">
+                        <input (change)="onChangeInput('name',$event)"
+                               formControlName="name"
+                               matInput/>
+                        <mat-error *ngIf="validateForm('name','required')" class="hidden-disabled">
+                            {{ 'ROLE.ADD.ROLE_NAME_REQUIRED' | translate }}
+                        </mat-error>
+                        <mat-error
+                            *ngIf="validateForm('name','maxlength')">{{ 'ROLE.ADD.ROLE_NAME_TOO_LONG' | translate }}
+                        </mat-error>
+                        <mat-hint align="start" class="active-label">{{ 'ROLE.ADD.ROLE_NAME' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid" id="duplicateKey ? 'has-error' : '' ">
+                        <input (change)="onChangeInput('code',$event)"
+                               formControlName="code"
+                               matInput/>
+                        <mat-error *ngIf="validateForm('code','required')" class="hidden-disabled">
+                            {{ 'ROLE.ADD.ROLE_ID_REQUIRED' | translate }}
+                        </mat-error>
+                        <mat-error
+                            *ngIf="validateForm('code','maxlength')">{{ 'ROLE.ADD.ROLE_CODE_TOO_LONG' | translate }}
+                        </mat-error>
+                        <mat-error
+                            *ngIf="validateForm('code','pattern')">{{ 'ROLE.ADD.ROLE_CODE_NO_SPACE' | translate }}
+                        </mat-error>
+                        <mat-hint [ngClass]="duplicateKey ? 'hidden' : 'active-label'"
+                                  align="start">{{ 'ROLE.ADD.ROLE_ID' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                    <div *ngIf="duplicateKey"
+                         class="input-error-label">{{ 'ROLE.ADD.KEY_EXIST_ERROR' | translate }}</div>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <mat-select formControlName="type">
+                            <mat-option *ngFor="let item of listTypes" [value]="item.id">{{item.name}}</mat-option>
+                        </mat-select>
+                        <mat-error>{{ 'ROLE.ADD.ROLE_TYPE_REQUIRED' | translate }}</mat-error>
+                        <mat-hint align="start" class="active-label">{{ 'ROLE.ADD.ROLE_TYPE' | translate }}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile my-3">
+                    <div class="box-role-check">
+                        <mat-checkbox (change)="toggle($event)"
+                                      class="role-check"
+                                      formControlName="defaultRole"
+                                      value="true">{{ 'ROLE.ADD.SET_DEFAULT_ROLE' | translate }}</mat-checkbox>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row mb-2">
+                        <div class="col-6 d-flex align-items-center">
+                            <p class="form-label mb-0">{{ 'ROLE.ADD.ROLE_LIST' | translate }}</p>
+                        </div>
+                        <div class="col-6 text-right d-flex align-items-center justify-content-end">
+                            <button
+                                (click)="checkAllRole($event)"
+                                class="btn btn-primary"
+                            >
+                                {{isCheckAllRole ? 'Hủy chọn' : 'Chọn tất cả'}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <div *ngIf="isValidPermission" class="input-error-label">{{msgValidPermission}}</div>
+                    <div class="box-role-check">
+                        <div *ngFor="let _rootRole of permissions" class="box-role">
+                            <mat-expansion-panel>
+                                    <mat-expansion-panel-header class="kt-timeline-3__item kt-border-top-grey kt-py-15 ">
+                                            <div class="kt-timeline-3__item-time">
+                                                <mat-checkbox (change)="parentCheckChange($event)"
+                                                              (click)="$event.stopPropagation()"
+                                                              [checked]="isParentChecked(_rootRole.objectCode)"
+                                                              [value]="_rootRole.objectCode">
+                                                    {{ _rootRole.objectName }}
+                                                </mat-checkbox>
+                                            </div>
+                                    </mat-expansion-panel-header>
+                                <div class="">
+                                    <div *ngFor="let _childRole of _rootRole.sysPermissions" class="box-role-sub ">
+                                            <span class="kt-timeline-3__item-time">
+                                                <mat-checkbox (change)="onChange($event)"
+                                                              [checked]="isChecked(_childRole.id)"
+                                                              [value]="_childRole.id">{{ _childRole.name }}
+                                                </mat-checkbox>
+                                            </span>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button (click)=close() cdkFocusInitial class="btn-cancel" mat-raised-button type="button">
+                            {{ 'COMMON.BTN_CANCEL' | translate }}
+                        </button>&nbsp;
+                        <button
+                            (click)="save()"
+                            class="btn-save"
+                            [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
+                            color="primary" mat-raised-button type="button">
+                            {{ 'COMMON.BTN_SAVE' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,61 @@
+<div class="kt-portlet popup-medium">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'APP.SERVICE.REGISTER.TITLE' | translate }}</h3>
+        </div>
+    </div>
+    <form class="kt-form" [formGroup]="registForm">
+        <div class="kt-body">
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-12 kt-margin-bottom-10-mobile">
+                        <p>
+                            <span>{{ 'APP.SERVICE.REGISTER.FUNCTION' | translate }}</span>
+                            <span class="bold word-break">{{data.item.name}}</span>
+                        </p>
+                    </div>
+                    <div class="col-md-12 kt-margin-bottom-20-mobile">
+                        <p>
+                            <span class="kt-margin-bottom-20-mobile word-break">
+                                {{data.item.description}}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                        <span
+                            class="bold kt-margin-bottom-20-mobile">{{ 'APP.SERVICE.REGISTER.QUESTION' | translate }}</span>
+                        <mat-form-field class="mat-form-field-fluid">
+                            <textarea matInput rows="5" formControlName="desc">
+                            </textarea>
+                            <mat-error *ngIf="validateForm('desc','maxlength')">
+                                {{ 'APP.SERVICE.REGISTER.DESCRIPTION_TOO_LONG' | translate }}
+                            </mat-error>
+                            <mat-error *ngIf="validateForm('desc','required')">
+                                {{ 'APP.SERVICE.REGISTER.DESCRIPTION_REQUIRED' | translate }}
+                            </mat-error>
+                            <mat-error *ngIf="validateForm('desc','pattern')">
+                                {{ 'APP.SERVICE.REGISTER.DESCRIPTION_PATTERN' | translate }}
+                            </mat-error>
+                            <mat-hint align="start">
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial (click)="close()">
+                            {{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+                        </button>&nbsp;
+                        <button color="primary" type="button" mat-raised-button cdkFocusInitial (click)="register()">
+                            {{ 'APP.SERVICE.REGISTER.BTN_REGISTER' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,89 @@
+<div class="kt-portlet role-edit popup-small">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'ROLE.DETAIL.TITLE' | translate }}</h3>
+        </div>
+    </div>
+    <form [formGroup]="roleForm" class="kt-form">
+        <div class="kt-portlet__body">
+            <div class="form-group kt-form__group row">
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid disabled-input">
+                        <input formControlName="name"
+                               matInput
+                               readonly/>
+                        <mat-hint align="start" class="deactive-label">{{ 'ROLE.DETAIL.ROLE_NAME' | translate }}
+                        </mat-hint>
+
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid disabled-input">
+                        <input formControlName="code"
+                               matInput
+                               readonly/>
+                        <mat-hint align="start" class="deactive-label">{{ 'ROLE.DETAIL.ROLE_ID' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <mat-select formControlName="type" disabled>
+                            <mat-option *ngFor="let item of listTypes" [value]="item.id">{{item.name}}</mat-option>
+                        </mat-select>
+                        <mat-hint align="start" class="active-label">{{ 'ROLE.ADD.ROLE_TYPE' | translate }}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile my-3">
+                    <div class="box-role-check">
+                        <mat-checkbox [checked]="defaultRole"
+                                      [disabled]="true"
+                                      class="role-check disabled"
+                                      formControlName="defaultRole" readonly>{{ 'ROLE.DETAIL.DEFAULT_ROLE_TEXT' | translate }}
+                        </mat-checkbox>
+                    </div>
+                </div>
+                <p class="form-label">{{ 'ROLE.ADD.ROLE_LIST' | translate }}</p>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <div class="box-role-check">
+                        <div *ngFor="let _rootRole of permissions" class="box-role">
+                            <div class="kt-timeline-3__item kt-border-top-grey kt-py-15 ">
+                                <span class="kt-timeline-3__item-time">
+                                    <mat-checkbox [checked]="isParentChecked(_rootRole.objectCode)" [disabled]=true>
+                                        {{ _rootRole.objectName }}
+                                    </mat-checkbox>
+                                </span>
+                            </div>
+                            <div class="">
+                                <div *ngFor="let _childRole of _rootRole.sysPermissions"
+                                     class="box-role-sub ">
+                                    <span class="kt-timeline-3__item-time">
+                                        <mat-checkbox
+                                            [checked]="getCheckedRole(_childRole.id)"
+                                            [disabled]=true
+                                            [value]="_childRole.id">{{ _childRole.name }}
+                                        </mat-checkbox>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button (click)="close()"
+                                cdkFocusInitial
+                                mat-raised-button
+                                type="button">
+                            {{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+                        </button>&nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

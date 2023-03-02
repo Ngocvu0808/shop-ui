@@ -1,0 +1,128 @@
+<div class="kt-portlet popup-medium">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{ 'FIELD.EDIT.TITLE' | translate }}</h3>
+		</div>
+	</div>
+	<form class="kt-form" [formGroup]="fieldFormEdit">
+		<div class="kt-portlet__body">
+			<div class="form-group kt-form__group row">
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput formControlName="name" (change)="onChangeInput('name',$event)"/>
+						<mat-error *ngIf="validateForm('name','required')">{{ 'FIELD.ADD.FIELD_REQUIRED' | translate }}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('name','maxlength')">{{ 'FIELD.ADD.FIELD_NAME_TOO_LONG' | translate }}
+						</mat-error>
+						<mat-hint>{{ 'FIELD.ADD.ENTER_FIELD' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput
+							   class="input-disabled"
+							   formControlName="key"
+							   readonly/>
+						<mat-hint>{{ 'FIELD.EDIT.KEY' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<p class="">{{ 'FIELD.EDIT.TYPE' | translate }}</p>
+					<mat-radio-group aria-labelledby="example-radio-group-label"
+									 class="example-radio-group"
+									 formControlName="type">
+						<div class="row">
+							<div class="col-md-6">
+								<mat-radio-button class="example-radio-button" value="SYS">
+									{{ 'FIELD.ADD.OTHER_INFO' | translate }}
+								</mat-radio-button>
+							</div>
+							<div class="col-md-6">
+								<mat-radio-button class="example-radio-button" value="PARAM">
+									{{ 'FIELD.ADD.PARAMETER' | translate }}
+								</mat-radio-button>
+							</div>
+						</div>
+					</mat-radio-group>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="full-width">
+						<mat-select formControlName="typeValue">
+							<mat-option *ngFor="let typeValue of listTypeValue" [value]="typeValue.name">
+								{{typeValue.name}}
+							</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="validateForm('typeValue','required')">{{ 'FIELD.ADD.TYPEVALUE_REQUIRED' | translate }}
+							trống
+						</mat-error>
+						<mat-hint>{{ 'FIELD.ADD.CHOOSE_TYPEVALUE' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput formControlName="formatValue"/>
+						<mat-error
+							*ngIf="validateForm('formatValue','maxlength')">{{ 'FIELD.ADD.FORMAT_TOO_LONG' | translate }}
+						</mat-error>
+						<mat-hint>{{ 'FIELD.ADD.ENTER_FORMAT' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="full-width">
+                        <mat-select formControlName="object">
+                            <mat-option *ngFor="let object of objects" [value]="object.code">
+                                {{object.code}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="validateForm('object','required')">{{ 'FIELD.ADD.OBJECT_REQUIRED' | translate }}
+                        </mat-error>
+                        <mat-hint>{{ 'FIELD.ADD.CHOOSE_OBJECT' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-error *ngIf="validateForm('note','maxlength')">{{ 'FIELD.ADD.NOTE_TOO_LONG' | translate }}
+						</mat-error>
+						<textarea matInput
+								  matTextareaAutosize
+								  matAutosizeMinRows=3
+								  matAutosizeMaxRows=3
+								  formControlName="note">
+						</textarea>
+						<mat-hint>{{ 'FIELD.ADD.NOTE' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+			<div class="kt-form__actions kt-form__actions--solid">
+				<div class="row text-right">
+					<div class="col-lg-12">
+						<button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial (click)="close()">
+							{{ 'COMMON.BTN_CANCEL' | translate }}
+						</button>&nbsp;
+                        <button
+                            class="btn-save"
+                            type="button"
+                            mat-raised-button
+                            color="primary"
+                            (click)="edit()"
+                            [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
+                        >
+							{{ 'COMMON.BTN_SAVE' | translate }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

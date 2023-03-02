@@ -1,0 +1,138 @@
+<div class="kt-portlet popup-extra-extra-large">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'SERVICE.ADD.TITLE' | translate }}</h3>
+        </div>
+    </div>
+    <div class="kt-form">
+        <div class="kt-body">
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+
+                                <mat-select multiple [(ngModel)]="systemValue" #system="ngModel"
+                                    (selectionChange)="fetchData()">
+                                    <mat-select-trigger>
+                                        {{systemValue.length === systemFilterList.length ? allLabel : displaySystemFilter()}}
+                                    </mat-select-trigger>
+                                    <select-check-all [title]="allLabel" [model]="system" [values]="systemFilterValue">
+                                    </select-check-all>
+                                    <mat-option *ngFor="let system of systemFilterList" [value]="system.id">
+                                        {{system.name|titlecase}}
+                                    </mat-option>
+                                </mat-select>
+
+                                <mat-hint align="start">{{'APP.SERVICE.ADD.FILTER'|translate}}
+                                    <strong>{{'APP.SERVICE.ADD.FILTER_BY_SYSTEM'|translate}}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="{{'APP.SERVICE.ADD.SEARCH'|translate}}"
+                                [(ngModel)]="searchValue" (keyup.enter)="fetchData()">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+                        <button mat-button color="primary" (click)="fetchData()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="box-table">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+                    class="mat-elevation-z8">
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell class="justify-content-start col-small" *matHeaderCellDef mat-sort-header>
+                            {{'COMMON.INDEX'|translate}}</mat-header-cell>
+                        <mat-cell class="justify-content-start col-small" *matCellDef="let element; let i = index">
+                            {{page * limit + i + 1}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serviceName">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{'APP.SERVICE.ADD.SERVICE_NAME'|translate}}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{element.name}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="system">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{'APP.SERVICE.ADD.SYSTEM'|translate}}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{element.nameSystem}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{'APP.SERVICE.ADD.DESCRIPTION'|translate}}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{element.description}}
+                        </mat-cell>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="tag">
+                        <mat-header-cell *matHeaderCellDef class="justify-content-start">
+                            {{'APP.SERVICE.ADD.TAG'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="justify-content-start box-block">
+                            <span *ngFor="let tag of element.tag" _ngcontent-dha-c15=""
+                                class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide">{{tag.name}}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef>
+                            {{'APP.SERVICE.ADD.ACTION'|translate}}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let item">
+                            <ng-container>
+                                <button [hidden]="!item.installed" class="btn-regist btn-unregist">
+                                    {{'APP.SERVICE.ADD.INSTALLED'|translate}}
+                                </button>
+                                <button [hidden]="item.installed" class="btn-regist" (click)="addItem(item)">
+                                    {{'APP.SERVICE.ADD.REGISTER'|translate}}
+                                </button>
+                            </ng-container>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <div class="no-record" *ngIf="dataSource.length==0 && this.canAccess == true">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+            <div class="no-record access-noti" *ngIf="dataSource.length==0 && this.canAccess == false">
+                <p>{{'COMMON.FORBIDDEN' | translate}}</p>
+            </div>
+            <mat-paginator [pageSize]="limit" [pageSizeOptions]="pageSizeOption" [length]="totalElement"
+                [pageIndex]="page" [showFirstLastButtons]="true" (page)="onPageChange($event)">
+            </mat-paginator>
+
+            <ng-container matColumnDef="tag">
+                <mat-header-cell *matHeaderCellDef class="justify-content-start">
+                    {{ "APP.SERVICE.ADD.TAG" | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="justify-content-start box-block">
+                    <span *ngFor="let tag of element.tags" _ngcontent-dha-c15=""
+                        class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide">{{ tag }}
+                    </span>
+                </mat-cell>
+            </ng-container>
+
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial (click)="close()">
+                            {{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

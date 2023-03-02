@@ -1,0 +1,85 @@
+<div class="kt-portlet group-user-edit">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{'GROUP.ADD.TITLE'|translate}}</h3>
+		</div>
+	</div>
+	<form class="kt-form" [formGroup]="formAdd">
+		<div class="kt-portlet__body">
+			<div class="form-group kt-form__group row">
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-label>{{'GROUP.ADD.GROUP_NAME'|translate}}</mat-label>
+						<label>
+							<input matInput
+								   placeholder="{{'GROUP.ADD.GROUP_NAME'|translate}}"
+								   formControlName="name"
+								   (change)="onChangeInput('name',$event)"/>
+						</label>
+						<mat-error *ngIf="validateForm('name','required')">{{'GROUP.ADD.GROUP_NAME_REQUIRED'|translate}}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('name','maxlength')">{{'GROUP.ADD.GROUP_NAME_TOO_LONG'|translate}}
+						</mat-error>
+						<mat-hint align="start">{{'GROUP.ADD.ENTER_GROUP_NAME'|translate}}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-label>{{'GROUP.ADD.GROUP_ID'|translate}}</mat-label>
+						<label>
+							<input matInput
+								   placeholder="{{'GROUP.ADD.GROUP_ID'|translate}}"
+								   formControlName="code"
+								   (change)="onChangeInput('code',$event)"/>
+						</label>
+						<mat-error *ngIf="validateForm('code','required')">{{'GROUP.ADD.GROUP_ID_REQUIRED'|translate}}
+						</mat-error>
+						<mat-error *ngIf="validateForm('code','pattern')">{{'GROUP.ADD.GROUP_ID_PATTERN'|translate}}
+						</mat-error>
+						<mat-error *ngIf="validateForm('code','maxlength')">{{'GROUP.ADD.GROUP_ID_TOO_LONG'|translate}}
+						</mat-error>
+						<mat-hint align="start">{{'GROUP.ADD.ENTER_GROUP_ID'|translate}}
+						</mat-hint>
+					</mat-form-field>
+					<div class="error-field" *ngIf="isDuplicate">{{'GROUP.ADD.GROUP_DUPLICATE'|translate}}</div>
+				</div>
+				<p class="form-label">{{'GROUP.ADD.ROLE'|translate}}</p>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<div class="box-role-check">
+						<mat-checkbox class="role-check"
+									  *ngFor="let role of roles"
+									  [checked]="isChecked(role)"
+									  [value]="role.id"
+									  (change)="onChange($event)">{{role.name}}
+						</mat-checkbox>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+			<div class="kt-form__actions kt-form__actions--solid">
+				<div class="row text-right">
+					<div class="col-lg-12">
+						<button class="btn-cancel"
+								type="button"
+								mat-raised-button
+								cdkFocusInitial
+								(click)="close()">
+							{{ 'COMMON.BTN_CANCEL' | translate }}
+						</button>&nbsp;
+						<button class="btn-save"
+								type="button"
+								color="primary"
+								mat-raised-button
+								[disabled]="!formAdd.dirty||!formAdd.valid"
+								(click)="save()">
+							{{ 'COMMON.BTN_SAVE' | translate }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

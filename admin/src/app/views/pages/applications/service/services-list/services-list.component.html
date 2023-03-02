@@ -1,0 +1,177 @@
+<div class="app-service">
+    <div class="service-bar">
+        <p class="text-center">
+            <button [hidden]="checkPermission('CLIENT_ADD_SERVICE')" class="add-button" mat-raised-button matTooltip=""
+                color="primary" type="button" (click)="add()">
+                <span>
+                    <mat-icon>add</mat-icon>
+                    {{ 'APP.SERVICE.GENERAL.ADD' | translate }}
+                </span>
+            </button>
+        </p>
+        <p class="service-title">{{ 'APP.SERVICE.GENERAL.MY_SERVICES' | translate }}</p>
+        <div class="service-list">
+            <button *ngFor="let service of listService; let i = index"
+                [ngClass]="{'active': service.id == serviceIdSelected}" class="service-btn"
+                (click)="viewDetailService(service.id)">
+                {{service.name}}
+            </button>
+        </div>
+    </div>
+    <div class="service-detail" *ngIf="serviceIdSelected">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3 *ngIf="serviceDetail">{{serviceDetail.name}}</h3>
+            </div>
+            <div class="col-lg-6">
+                <p class="box-detail-btn" *ngIf="serviceDetail && serviceDetail.status == 'DEACTIVE'">
+                    <span class="text-warn">
+                        <mat-icon class="warn-icon" color="warn">error_outline</mat-icon>
+                        {{ 'APP.SERVICE.GENERAL.SERVICE_NOT_WORKING' | translate }}
+                    </span>
+                    <button [hidden]="checkPermission('CLIENT_DELETE_SERVICE')" class="btn-remove" mat-raised-button
+                        matTooltip="" color="warn" type="button" (click)="removeServiceApp()">
+                        {{ 'APP.SERVICE.GENERAL.REMOVE_SERVICE' | translate }}
+                    </button>
+                </p>
+                <p class="box-detail-btn" *ngIf="serviceDetail && serviceDetail.status == 'ACTIVE'">
+                    <button [hidden]="checkPermission('CLIENT_PENDING_SERVICE')" class="btn-remove" mat-raised-button
+                        matTooltip="" color="primary" type="button" (click)="cancelServiceApp()">
+                        {{ 'APP.SERVICE.GENERAL.CANCEL_SERVICE' | translate }}
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="s-des">{{ 'APP.SERVICE.GENERAL.SERVICE_DES' | translate }}</p>
+                <p class="s-des-content" *ngIf="serviceDetail">
+                    {{serviceDetail.description}}
+                </p>
+                <p class="s-des">{{ 'APP.SERVICE.GENERAL.FEATURES' | translate }}</p>
+                <div class="row">
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select (selectionChange)="filterByStatus()" [(ngModel)]="statusValue">
+                                    <mat-option value="">
+                                        Tất cả
+                                    </mat-option>
+                                    <mat-option value="ACTIVE">
+                                        Đã đăng ký
+                                    </mat-option>
+                                    <mat-option value="null">
+                                        Chưa đăng ký
+                                    </mat-option>
+                                    <mat-option value="DEACTIVE">
+                                        Chờ duyệt
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{ 'APP.SERVICE.GENERAL.FILTER' | translate }}
+                                    <strong>{{ 'APP.SERVICE.GENERAL.STATUS_FILTER' | translate }}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="{{'COMMON.SEARCH_TOOLTIP'|translate}}"
+                                [(ngModel)]="searchValue" (keyup.enter)="search()">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+                        <button mat-button color="primary" (click)="search()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="list-feature" style="position:relative;padding: 0">
+                            <div [ngClass]="serviceDetail && serviceDetail.status == 'DEACTIVE'?'disable-table':''">
+                            </div>
+                            <mat-table [dataSource]="dataSearchApi" matSort (matSortChange)="onSortChange($event)"
+                                class="mat-elevation-z8">
+
+                                <ng-container matColumnDef="name">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        {{ 'APP.SERVICE.GENERAL.FEATURE_NAME' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{element.name}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="api">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        {{ 'APP.SERVICE.GENERAL.API' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{element.api}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="method">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="col-small">
+                                        {{ 'APP.SERVICE.GENERAL.METHOD' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell  class="col-small" *matCellDef="let element"> {{element.method}} </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="type">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="col-small">
+                                        {{ 'APP.SERVICE.GENERAL.API_TYPE' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element" class="col-small"> {{element.type}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="description">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        {{ 'APP.SERVICE.GENERAL.DES' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="col-small">
+                                        {{ 'APP.SERVICE.GENERAL.STATUS' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element" class="col-small"> {{getDisplayStatus(element.status)}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="actions">
+                                    <mat-header-cell *matHeaderCellDef class="col-actions-large">
+                                        {{ 'APP.SERVICE.GENERAL.ACTIONS' | translate }}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="col-actions-large">
+                                        <ng-container>
+                                            <button *ngIf="item.status == null" class="btn-regist"
+                                                (click)="register(item)"
+                                                [disabled]="serviceDetail && serviceDetail.status!='ACTIVE'">
+                                                {{ 'APP.SERVICE.GENERAL.REGIST' | translate }}
+                                            </button>
+                                            <button *ngIf="item.status != null" class="btn-regist btn-unregist"
+                                                (click)="unRegister(item)"
+                                                [disabled]="serviceDetail && serviceDetail.status!='ACTIVE'">
+                                                {{ 'APP.SERVICE.GENERAL.UN_REGIST' | translate }}
+                                            </button>
+                                        </ng-container>
+                                    </mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                            </mat-table>
+                        </div>
+                        <div class="no-record" *ngIf="dataSource.length==0">
+                            <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="no-record">
+        <div class="box-spiner" *ngIf='loadingListService'>
+            <mat-spinner></mat-spinner>
+        </div>
+        <p *ngIf="!serviceIdSelected">{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+    </div>
+</div>

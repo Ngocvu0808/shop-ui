@@ -1,0 +1,70 @@
+<div class="kt-portlet popup-medium">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'PRODUCT.UPDATE' | translate }}</h3>
+        </div>
+    </div>
+    <form class="kt-form" [formGroup]="editForm">
+        <div class="kt-portlet__body">
+            <div class="form-group kt-form__group row">
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput formControlName="name" (input)="onChangeInput('name',$event)" />
+                        <mat-error *ngIf="validateForm('name','required')">{{ 'PRODUCT.NULL_INPUT' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('name','maxlength')">{{ 'API.ADD.NAME_MAX_LENGHTH' | translate }}
+                        </mat-error>
+                        <mat-hint align="start">{{ 'PRODUCT.NAME' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput formControlName="buyPrice" (input)="onChangeInput('buyPrice',$event)" />
+                        <mat-error *ngIf="validateForm('buyPrice','required')">{{ 'PRODUCT.NULL_INPUT' | translate }}
+                        </mat-error>
+                        <mat-hint align="start">{{ 'PRODUCT.BUY_PRICE' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput formControlName="sellPrice" (input)="onChangeInput('sellPrice',$event)" />
+                        <mat-error *ngIf="validateForm('sellPrice','required')">{{ 'PRODUCT.NULL_INPUT' | translate }}
+                        </mat-error>
+                        <mat-hint align="start">{{ 'PRODUCT.SELL_PRICE' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input matInput formControlName="source" (input)="onChangeInput('source',$event)" />
+                        <mat-error *ngIf="validateForm('source','required')">{{ 'PRODUCT.NULL_INPUT' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('source','maxlength')">{{ 'API.ADD.CODE_MAXLENGTH' | translate }}
+                        </mat-error>
+                        <mat-hint align="start">{{ 'PRODUCT.SOURCE' | translate }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial (click)="close()">
+                            {{ 'COMMON.BTN_CANCEL' | translate }}
+                        </button>&nbsp;
+                        <button class="btn-save" type="button" mat-raised-button color="primary"
+                                [disabled]="!editForm.dirty||!editForm.valid||!isValueChange" (click)="save()">
+                            {{ 'COMMON.BTN_SAVE' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

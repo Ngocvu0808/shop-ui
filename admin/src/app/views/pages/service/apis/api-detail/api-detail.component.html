@@ -1,0 +1,76 @@
+<div class="kt-portlet popup-medium">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{ 'API.DETAIL.TITLE' | translate }}</h3>
+        </div>
+    </div>
+    <div class="kt-form">
+        <div class="kt-body">
+            <p class="content-detail bold">{{apiDetail.name}}</p>
+            <p class="content-detail">
+                <span class="detail-label bold">{{ 'API.DETAIL.CODE' | translate }}</span>
+                <span class="data-content">{{apiDetail ? apiDetail.code : ""}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label bold">{{ 'API.DETAIL.METHOD' | translate }}</span>
+                <span class="data-content notice">{{apiDetail.method}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label bold">{{ 'API.DETAIL.API' | translate }}</span>
+                <span class="data-content highlight">{{apiDetail.api}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label bold">{{ 'API.DETAIL.SYSTEM' | translate }}</span>
+                <span
+                    class="data-content">{{apiDetail.system ? (apiDetail.system.name ? apiDetail.system.name : '') : ''}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label bold">{{ 'API.DETAIL.SERVICE' | translate }}</span>
+                <span
+                    class="data-content">{{apiDetail.service ? (apiDetail.service.name ? apiDetail.service.name : '') : ''}}</span>
+            </p>
+            <p class="content-detail">
+                <span class="detail-label bold">{{ 'API.DETAIL.TYPE' | translate }}</span>
+                <span class="data-content">{{apiDetail.type}}</span></p>
+            <p class="content-detail des">
+                <span class="detail-label bold des">{{ 'API.DETAIL.DES' | translate }}</span>
+                <span class="data-content display-content des">{{apiDetail.description}}</span>
+            </p>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="content-detail"><span
+                            class="detail-label bold w-50">{{ 'API.DETAIL.DATE_CREATE' | translate }}</span> <span
+                            class="data-content w-50">{{apiDetail.createdTime|date:'dd/MM/yyyy hh:mm a'}}</span></p>
+                </div>
+                <div class="col-lg-6">
+                    <p class="content-detail"><span
+                            class="detail-label bold w-50">{{ 'API.DETAIL.USER_CREATE' | translate }}</span> <span
+                            class="data-content w-50">{{apiDetail.creatorName}}</span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="content-detail"><span
+                            class="detail-label bold w-50">{{ 'API.DETAIL.UPDATE' | translate }}</span> <span
+                            class="data-content w-50">{{apiDetail.modifiedTime|date:'dd/MM/yyyy hh:mm a'}}</span></p>
+                </div>
+                <div class="col-lg-6">
+                    <p class="content-detail"><span
+                            class="detail-label bold w-50">{{ 'API.DETAIL.USER_UPDATE' | translate }}</span> <span
+                            class="data-content w-50">{{apiDetail.updaterName}}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button type="button" mat-raised-button cdkFocusInitial (click)="close()">
+                            {{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

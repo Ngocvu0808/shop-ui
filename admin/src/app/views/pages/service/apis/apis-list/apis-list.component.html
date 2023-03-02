@@ -1,0 +1,211 @@
+<kt-portlet class="main-content api-list">
+    <h1></h1>
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTitle>
+            <h3 class="kt-portlet__head-title">
+                <span>{{ 'API.GENERAL.TITLE' | translate }}</span>
+            </h3>
+        </ng-container>
+        <ng-container ktPortletTools>
+            <button *ngIf="canAdd" class="add-button" mat-raised-button color="primary" type="button" (click)="add()">
+                <span>
+                    <mat-icon>add</mat-icon>
+                    {{ 'API.GENERAL.ADD' | translate }}
+                </span>
+            </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="kt-form kt-margin-b-30">
+            <!-- start::FILTERS -->
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select [(ngModel)]="systemValue" (selectionChange)="onSystemFilterChange()">
+                                    <mat-option value="">{{allLabel}}</mat-option>
+                                    <mat-option *ngFor="let system of systemFilterList" [value]="system.id">
+                                        {{ system.name | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{ 'API_REQUEST.GENERAL.FILTER' | translate }}
+                                    <strong>{{ 'API_REQUEST.GENERAL.SYSTEM_FILTER' | translate }}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select [(ngModel)]="serviceValue" (selectionChange)="search()">
+                                    <mat-option value="">{{allLabel}}</mat-option>
+                                    <mat-option *ngFor="let service of serviceFilterList" [value]="service.id">
+                                        {{ service.name | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{ 'API_REQUEST.GENERAL.FILTER' | translate }}
+                                    <strong>{{ 'API_REQUEST.GENERAL.SERVICE_FILTER' | translate }}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select [(ngModel)]="statusValue" (selectionChange)="search()">
+                                    <mat-option value="">{{allLabel}}</mat-option>
+                                    <mat-option *ngFor="let status of statusFilterList" [value]="status">
+                                        {{ status | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{ 'API_REQUEST.GENERAL.FILTER' | translate }}
+                                    <strong>{{ 'API_REQUEST.GENERAL.STATUS_FILTER' | translate }}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select [(ngModel)]="typeValue" (selectionChange)="search()">
+                                    <mat-option value="">{{allLabel}}</mat-option>
+                                    <mat-option *ngFor="let type of typeFilterList" [value]="type">
+                                        {{ type | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint align="start">{{ 'API_REQUEST.GENERAL.FILTER' | translate }}
+                                    <strong>{{ 'API_REQUEST.GENERAL.API_TYPE' | translate }}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="{{ 'API_REQUEST.GENERAL.SEARCH' | translate }}"
+                                [(ngModel)]="searchValue" (keyup.enter)="search()" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+                        <button mat-button color="primary" (click)="search()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- end::FILTERS -->
+            <div class="box-table">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+                    class="mat-elevation-z8">
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell class="justify-content-start col-small" *matHeaderCellDef mat-sort-header>
+                            {{ 'COMMON.INDEX' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start col-small" *matCellDef="let element; let i = index">
+                            {{ page * limit + i + 1 }}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="api">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.API' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{ element.api }} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="method">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.METHOD' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{ element.method }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.NAME' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{ element.name }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="system">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.SYSTEM' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{ element.system.name }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="service">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.SERVICE' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{ element.service.name }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.TYPE' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element"> {{ element.type }}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef mat-sort-header>
+                            {{ 'API.GENERAL.STATUS' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let element">
+                            <span class="kt-badge kt-badge--inline kt-badge--pill {{
+                                    getItemCssClassByStatus(element.status)
+                                }} kt-badge--wide">{{ element.status }}</span>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell class="justify-content-start" *matHeaderCellDef>
+                            {{ 'API.GENERAL.ACTIONS' | translate }}</mat-header-cell>
+                        <mat-cell class="justify-content-start" *matCellDef="let item">
+                            <ng-container>
+                                <button mat-icon-button color="primary" (click)="viewDetail(item)">
+                                    <mat-icon>remove_red_eye</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button color="primary" (click)="edit(item)">
+                                    <mat-icon>create</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-icon-button color="warn" [disabled]="item.status == 'ACTIVE'"
+                                        (click)="delete(item)">
+                                        <mat-icon
+                                            ngClass="{{ item.status != 'ACTIVE' ? 'icon-delete active' : 'icon-delete' }} ">
+                                            delete
+                                        </mat-icon>
+                                    </button>
+                                    <button *ngIf="item.status != 'PENDING'" mat-icon-button color="primary">
+                                        <mat-icon [ngClass]="item.status == 'DEACTIVE' ? 'play' : 'pause'"
+                                            (click)="updateStatus(item)">
+                                            {{ item.status === 'DEACTIVE' ? 'play_arrow' : 'pause' }}
+                                        </mat-icon>
+                                    </button>
+                                </mat-menu>
+                            </ng-container>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                </mat-table>
+            </div>
+            <div class="box-spiner" *ngIf='loading && dataSource.length == 0'>
+                <mat-spinner></mat-spinner>
+            </div>
+            <div class="no-record" *ngIf="!loading && dataSource.length == 0 && this.canAccess == true">
+                <p>{{ 'COMMON.NO_RECORD_SEARCH' | translate }}</p>
+            </div>
+            <div class="no-record access-noti" *ngIf="!loading && dataSource.length == 0 && this.canAccess == false">
+                <p>{{ 'COMMON.FORBIDDEN' | translate }}</p>
+            </div>
+            <mat-paginator [pageSize]="limit" [pageSizeOptions]="pageSizeOption" [length]="totalElement"
+                [pageIndex]="page" [showFirstLastButtons]="true" (page)="onPageChange($event)">
+            </mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

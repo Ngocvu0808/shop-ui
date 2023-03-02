@@ -1,0 +1,144 @@
+<div class="kt-portlet popup-medium">
+	<div class="kt-portlet__head kt-portlet__head__custom">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">{{ 'API.ADD.TITLE' | translate }}</h3>
+		</div>
+	</div>
+	<form class="kt-form" [formGroup]="addForm">
+		<div class="kt-portlet__body">
+			<div class="form-group kt-form__group row">
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput
+							   formControlName="name"
+							   (change)="onChangeInput('name',$event)"/>
+						<mat-error
+							*ngIf="validateForm('name','required')">{{ 'API.ADD.NAME_REQUIRED' | translate }}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('name','maxlength')">{{ 'API.ADD.NAME_MAX_LENGHTH' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.NAME' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput
+							   formControlName="code"
+							   (change)="onChangeInput('code',$event)"/>
+						<mat-error
+							*ngIf="validateForm('code','required')">{{ 'API.ADD.CODE_REQUIRED' | translate }}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('code','maxlength')">{{ 'API.ADD.CODE_MAXLENGTH' | translate }}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('code','pattern')">{{ 'API.ADD.CODE_PATTERN' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.CODE' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<input matInput
+							   formControlName="api"
+							   (change)="onChangeInput('api',$event)"/>
+						<mat-error
+							*ngIf="validateForm('api','required')">{{ 'API.ADD.API_REQUIRED' | translate }}
+						</mat-error>
+						<mat-error
+							*ngIf="validateForm('api','maxlength')">{{ 'API.ADD.API_MAXLENGTH' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.API' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-4 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-select formControlName="method">
+							<mat-option *ngFor="let method of methodList"
+										[value]="method.name">{{method.name}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="validateForm('method','required')">{{ 'API.ADD.METHOD_REQUIRED' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.METHOD' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-8 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-select formControlName="type">
+							<mat-option *ngFor="let type of typeList"
+										[value]="type.name">{{type.name}}</mat-option>
+						</mat-select>
+						<mat-hint align="start">{{ 'API.ADD.TYPE' | translate }}
+						</mat-hint>
+					</mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-select formControlName="system" (selectionChange)="onSystemChange()">
+							<mat-option *ngFor="let system of systemList"
+										[value]="system.id">{{system.name}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="validateForm('system','required')">{{ 'API.ADD.SYSTEM_REQUIRED' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.SYSTEM' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+						<mat-select formControlName="service">
+							<mat-option *ngFor="let service of serviceList"
+										[value]="service.id">{{service.name}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="validateForm('service','required')">{{ 'API.ADD.SERVICE_REQUIRED' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.SERVICE' | translate }}
+						</mat-hint>
+					</mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+					<mat-form-field class="mat-form-field-fluid">
+                        <textarea matInput rows="3" formControlName="description"></textarea>
+						<mat-error
+							*ngIf="validateForm('description','maxlength')">{{ 'API.ADD.DES_MAXLENGTH' | translate }}
+						</mat-error>
+						<mat-hint align="start">{{ 'API.ADD.DES' | translate }}
+						</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+			<div class="kt-form__actions kt-form__actions--solid">
+				<div class="row text-right">
+					<div class="col-lg-12">
+						<button class="btn-cancel"
+								type="button"
+								mat-raised-button
+								cdkFocusInitial
+								(click)="close()">
+							{{ 'COMMON.BTN_CANCEL' | translate }}
+						</button>&nbsp;
+						<button class="btn-save"
+								type="button"
+								mat-raised-button
+								color="primary"
+                                [disabled]="!addForm.dirty||!addForm.valid"
+                                [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}"
+								(click)="save()">
+							{{ 'COMMON.BTN_SAVE' | translate }}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

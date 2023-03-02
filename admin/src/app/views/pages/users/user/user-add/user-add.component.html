@@ -1,0 +1,91 @@
+<div class="kt-portlet user-edit popup-medium">
+    <div class="kt-portlet__head kt-portlet__head__custom">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">{{'USER.ADD.TITLE'|translate}}</h3>
+        </div>
+    </div>
+    <form [formGroup]="formAdd" class="kt-form">
+        <div class="kt-portlet__body">
+            <div class="form-group kt-form__group row">
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input (change)="onChangeInput('firstName',$event)" formControlName="firstName" matInput />
+                        <mat-error *ngIf="validateForm('firstName','required')">
+                            {{'USER.ADD.FIRST_NAME_REQUIRED'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('firstName','maxlength')">
+                            {{'USER.ADD.FIRST_NAME_MAX_LENGTH'|translate}}
+                        </mat-error>
+                        <mat-hint align="start">{{'USER.ADD.FIRST_NAME_PLACEHOLDER'|translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input (change)="onChangeInput('lastName',$event)" formControlName="lastName" matInput />
+                        <mat-error *ngIf="validateForm('lastName','required')">
+                            {{'USER.ADD.LAST_NAME_REQUIRED'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('lastName','maxlength')">
+                            {{'USER.ADD.LAST_NAME_MAX_LENGTH'|translate}}
+                        </mat-error>
+                        <mat-hint align="start">{{'USER.ADD.LAST_NAME_PLACEHOLDER'|translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input (change)="isValidUser=false" formControlName="username" matInput />
+                        <mat-error *ngIf="validateForm('username','required')">
+                            {{'USER.ADD.USERNAME_REQUIRED'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('username','minlength')">
+                            {{'USER.ADD.USERNAME_MIN_LENGTH'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('username','maxlength')">
+                            {{'USER.ADD.USERNAME_MAX_LENGTH'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('username','duplidate')">
+                            {{'USER.ADD.USERNAME_EXISTED'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('username','pattern')">
+                            {{'USER.ADD.USERNAME_PATTERN'|translate}}
+                        </mat-error>
+                        <mat-hint align="start">Username*</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <mat-form-field class="mat-form-field-fluid">
+                        <input (change)="isValidEmail=false" formControlName="email" matInput />
+                        <mat-error *ngIf="validateForm('email','required')">{{'USER.ADD.EMAIL_REQUIRED'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('email','email')">{{'USER.ADD.EMAIL_PATTERN'|translate}}
+                        </mat-error>
+                        <mat-error *ngIf="validateForm('email','duplidate')">{{'USER.ADD.EMAIL_EXISTED'|translate}}
+                        </mat-error>
+                        <mat-hint align="start">Email*</mat-hint>
+                    </mat-form-field>
+                </div>
+                <p class="form-label">{{'USER.ADD.ROLES'|translate}}</p>
+                <div class="col-lg-12 kt-margin-bottom-20-mobile">
+                    <div *ngFor="let role of roleList; let i=index;" class="box-role-check">
+                        <mat-checkbox (change)="onChange($event)" [checked]="isChecked(role)" [value]="role.id"
+                            class="role-check">{{role.name}}</mat-checkbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+            <div class="kt-form__actions kt-form__actions--solid">
+                <div class="row text-right">
+                    <div class="col-lg-12">
+                        <button (click)="close()" cdkFocusInitial class="btn-cancel" mat-raised-button type="button">
+                            {{'USER.ADD.CLOSE_BUTTON_LABEL'|translate}}
+                        </button>&nbsp;
+                        <button (click)="save()" color="primary" mat-raised-button type="button">
+                            {{'USER.ADD.SAVE_BUTTON_LABEL'|translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

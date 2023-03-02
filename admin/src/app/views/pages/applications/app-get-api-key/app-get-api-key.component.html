@@ -1,0 +1,26 @@
+<div class="kt-portlet popup-medium">
+  <div class="kt-portlet__head kt-portlet__head__custom">
+    <div class="kt-portlet__head-label">
+      <h3 class="kt-portlet__head-title">{{'APP.DETAIL.SETTING.API_KEY'|translate}}</h3>
+    </div>
+  </div>
+  <div class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit">
+    <div class="kt-form__actions kt-form__actions--solid">
+      <div class="row text-right">
+        <div class="col-lg-12">
+          <p class="api-key text-left"><span class="apikey">***************************************************************** </span>
+            <a class="link-copy" matTooltip="Copy" color="primary"
+               (click)="copyMessage(apiKey)" value="click to copy">
+              <mat-icon class="icon-copy pointer">library_books</mat-icon>
+            </a>
+          </p>
+        </div>
+        <div class="col-lg-12">
+          <button class="btn-cancel" type="button" mat-raised-button cdkFocusInitial (click)="close()">
+            {{ 'COMMON.BTN_CLOSE_LABEL' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

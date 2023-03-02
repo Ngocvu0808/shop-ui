@@ -1,0 +1,131 @@
+<div class="box-app-detail">
+    <mat-icon class="icon-back link-cursor" (click)="back()">arrow_back_ios</mat-icon>
+    {{'APP.DETAIL.TITLE'|translate}}
+    <div class="row box-title">
+        <div class="col-xl-9 col-lg-9 col-md-9 col-12">
+            <h2 class="app-name">{{appDetail.name}}
+                <div [class]="appDetail.status == 'ACTIVE' ? 'app-status-active' : 'app-status-deactive'">
+                </div>
+            </h2>
+            <p class="app description">{{appDetail.description}}</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-12">
+            <div class="box-app-info">
+                <p>{{'APP.DETAIL.CREATION_USER'|translate}} <span class="user-name">{{appDetail.creator_name}}</span>
+                </p>
+                <p>{{'APP.DETAIL.CREATION_TIME'|translate}}
+                    <span>{{appDetail.created_time | date: 'dd/MM/yyyy hh:mm a'}}</span></p>
+                <div class="box-setting">
+                    <button class="button-setting ml-2" mat-icon-button aria-label="More actions"
+                        [matMenuTriggerFor]="menu">
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button [hidden]="checkPermission('CLIENT_UPDATE')" mat-menu-item (click)="editApp(appDetail)">
+                            <span>{{'APP.DETAIL.EDIT.TITLE'|translate}}</span>
+                        </button>
+                        <button mat-menu-item (click)="changeStatusApp()">
+                            <span
+                                *ngIf="appDetail.status == 'ACTIVE'">{{'APP.DETAIL.SETTING.DEACTIVE_APP'|translate}}</span>
+                            <span
+                                *ngIf="appDetail.status == 'DEACTIVE'">{{'APP.DETAIL.SETTING.ACTIVE_APP'|translate}}</span>
+                        </button>
+
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="group-app-detail">
+        <div class="row app-detail">
+            <div class="col-lg-3 service-bar">
+                <div class="col-lg-12">
+                    <p class="app-detail"><span class="title">{{'APP.DETAIL.CLIENT_ID'|translate}}</span> <span
+                            class="data">{{appDetail.client_id}}</span>
+                        <a class="link-copy" matTooltip="Copy" color="primary"
+                            (click)="copyMessage(appDetail.client_id)" value="click to copy">
+                            <mat-icon class="icon-copy">library_books</mat-icon>
+                        </a>
+                    </p>
+                    <p class="app-detail"><span class="title">{{'APP.DETAIL.CLIENT_SECRET'|translate}}</span>
+                        <span class="data">{{appDetail.client_secret}}</span>
+                        <a class="link-copy" matTooltip="Copy" color="primary"
+                            (click)="copyMessage(appDetail.client_secret)" value="click to copy">
+                            <mat-icon class="icon-copy">library_books</mat-icon>
+                        </a>
+                    </p>
+                    <div>
+                        <div *ngIf="!authType">
+                            <p>
+                                <span class="title">{{'APP.DETAIL.API_KEY'|translate}}</span>
+                                <span *ngIf="!apiKeyStatus" class="data">{{apiKey}}</span>
+                                <span *ngIf="!apiKeyStatus">
+                                    <a class="link-copy" matTooltip="Copy" (click)="copyMessage(apiKey)"
+                                        value="click to copy">
+                                        <mat-icon class="icon-copy">library_books</mat-icon>
+                                    </a>
+                                    <a class="link-copy" matTooltip="Create new" (click)="refreshApiKey()"
+                                        value="click to createNew">
+                                        <mat-icon class="icon-renew icon-copy">cached</mat-icon>
+                                    </a>
+                                    <a class="link-copy" matTooltip="Disconnect" (click)="cancelApiKey()"
+                                        value="click to delete">
+                                        <mat-icon class="icon-delete active">close</mat-icon>
+                                    </a>
+                                </span>
+                                <button *ngIf="apiKeyStatus" mat-flat-button color="primary" (click)="createApiKey()">
+                                    <span>{{'APP.DETAIL.SETTING.GET_API_KEY'|translate}}</span>
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <p class="app-detail"><span class="title">{{'APP.DETAIL.IP_WHITE_LIST'|translate}}</span>
+                        <input *ngIf="showInputIp" type="text" [(ngModel)]="ipWhiteList"
+                            (keyup.enter)="addIpWhiteList()" autofocus>
+                        <button mat-icon-button color="primary"
+                            [hidden]="checkPermission('DEVELOPER') || checkPermission('CLIENT_ADD_IP')"
+                            (click)="addIpWhiteList()" matTooltip="{{'APP.DETAIL.ADD_IP_TOOLTIP' | translate}}">
+                            <mat-icon>
+                                library_add
+                            </mat-icon>
+                        </button>
+                    </p>
+                    <p class="error-field" *ngIf="ipBlank">Ip không được bỏ trống</p>
+                    <div class="box-ip-white-list">
+                        <p class="ip-list" *ngFor="let ip of listIpWhiteList">{{ip}}
+                            <button mat-icon-button color="primary"
+                                [hidden]="checkPermission('DEVELOPER') || checkPermission('CLIENT_DELETE_IP')"
+                                (click)="deleteIp(ip)" matTooltip="{{'COMMON.DELETE_TOOLTIP' | translate}}">
+                                <mat-icon color="warn">
+                                    delete
+                                </mat-icon>
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <mat-tab-group selectedIndex="{{tabId}}" mat-align-tabs="start" (selectedTabChange)="tabChange($event)">
+                    <mat-tab aria-label="0" *ngIf="authType" label="{{'APP.TAB.REFRESH_TOKEN'|translate}}">
+                        <mar-refresh-token [isActiveTab]="reloadTab"></mar-refresh-token>
+                    </mat-tab>
+                    <mat-tab aria-label="1" *ngIf="!authType" label="{{'APP.TAB.API_KEY'|translate}}">
+                        <mar-api-key (reloadDetail)="reloadTabDetail($event)" [isReloadApiKey]="reloadApiTab"
+                            [isActiveTab]="reloadTab"></mar-api-key>
+                    </mat-tab>
+                    <mat-tab aria-label="3" *ngIf="authType" label="{{'APP.TAB.ACCESS_TOKEN'|translate}}">
+                        <mar-access-tokens-list [isActiveTab]="reloadTab"></mar-access-tokens-list>
+                    </mat-tab>
+                    <mat-tab aria-label="4" label="{{'APP.TAB.ACCESS_HISTORY'|translate}}">
+                        <mar-logs-history-list [isActiveTab]="reloadTab"></mar-logs-history-list>
+                    </mat-tab>
+                    <mat-tab aria-label="5" label="{{'APP.TAB.SERVICE'|translate}}">
+                        <mar-services-list [status]="status" [isActiveTab]="reloadTab"></mar-services-list>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>

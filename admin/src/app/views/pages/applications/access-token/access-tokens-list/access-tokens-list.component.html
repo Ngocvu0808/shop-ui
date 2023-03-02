@@ -1,0 +1,108 @@
+<kt-portlet class="main-content app-user-list">
+	<kt-portlet-header [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTitle>
+			<div class="col-md-2 kt-margin-bottom-10-mobile">
+				<div class="kt-form__control">
+					<mat-form-field class="mat-form-field-fluid col-md-12">
+						<mat-select [(ngModel)]="statusValue" (selectionChange)="fetchData()">
+							<mat-option value="">{{allLabel}}</mat-option>
+							<mat-option *ngFor="let status of filterStatus" [value]="status">
+								{{status|titlecase}}
+							</mat-option>
+						</mat-select>
+						<mat-hint align="start">{{'APP.ACCESS_TOKEN.FILTER'|translate}}
+							<strong>{{'APP.ACCESS_TOKEN.STATUS_FILTER'|translate}}</strong>
+						</mat-hint>
+					</mat-form-field>
+				</div>
+			</div>
+		</ng-container>
+	</kt-portlet-header>
+	<kt-portlet-body>
+		<div class="kt-form kt-margin-b-30">
+			<div>
+				<mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+						   class="mat-elevation-z8">
+					<ng-container matColumnDef="index">
+						<mat-header-cell *matHeaderCellDef class="col-small"> {{'APP.GENERAL.INDEX'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let element; let i = index;" class="col-small">
+							{{ i + 1 }}
+						</mat-cell>
+					</ng-container>
+
+                    <ng-container matColumnDef="accessToken">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.ACCESS_TOKEN.ACCESS_TOKEN'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.accessToken}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="refreshToken">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.ACCESS_TOKEN.REFRESH_TOKEN'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.refreshToken}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'APP.ACCESS_TOKEN.CREATE_DATE'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.createdTime| date: 'dd/MM/yyyy hh:mm a'}}
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="IP">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.ACCESS_TOKEN.IP'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.ip}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="timeOut">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.ACCESS_TOKEN.EXPIRED_DATE'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.expireTime | date: 'dd/MM/yyyy hh:mm a'}}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{'APP.ACCESS_TOKEN.STATUS'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span
+                                class="kt-badge kt-badge--inline kt-badge--pill {{ getItemCssClassByStatus(element.status) }} kt-badge--wide">{{ element.status }}</span>
+                        </mat-cell>
+                    </ng-container>
+
+					<ng-container matColumnDef="actions">
+						<mat-header-cell *matHeaderCellDef class="col-actions-large">
+							{{'APP.ACCESS_TOKEN.ACTION'|translate}}
+						</mat-header-cell>
+						<mat-cell *matCellDef="let item" class="col-actions-large">
+							<ng-container>
+								<button mat-icon-button color="warn" [hidden]="item.status!='ACTIVE'"
+										(click)="disconnect(item.id)">
+									<mat-icon matTooltip="{{'APP.ACCESS_TOKEN.DISCONNECT'|translate}}">
+										close
+									</mat-icon>
+								</button>
+							</ng-container>
+						</mat-cell>
+					</ng-container>
+					<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+					<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+				</mat-table>
+            </div>
+            <div class="box-spiner" *ngIf='loading && dataSource.length == 0'>
+                <mat-spinner></mat-spinner>
+            </div>
+			<div class="no-record" *ngIf="dataSource.length==0">
+				<p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+			</div>
+		</div>
+	</kt-portlet-body>
+</kt-portlet>

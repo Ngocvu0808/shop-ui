@@ -1,0 +1,141 @@
+<kt-portlet class="main-content">
+    <h1></h1>
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+        <ng-container ktPortletTitle>
+            <h3 class="kt-portlet__head-title">
+                <span>{{ 'FIELD.GENERAL.TITLE' | translate }}</span>
+            </h3>
+        </ng-container>
+        <ng-container ktPortletTools>
+            <button class="add-button" color="primary" type="button" mat-raised-button [hidden]="checkPermission('FIELD_CONFIG_ADD')"
+                    [disabled]="checkPermission('FIELD_CONFIG_ADD')" (click)="addField()">
+                <span>
+                    <mat-icon>add</mat-icon>
+                    {{ 'FIELD.GENERAL.ADD_FIELD' | translate }}
+                </span>
+            </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="kt-form kt-margin-b-30">
+            <!-- start::FILTERS -->
+            <div class="kt-form__filtration">
+                <div class="row align-items-center">
+                    <div class="col-md-2 kt-margin-bottom-10-mobile">
+                        <div class="kt-form__control">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <mat-select multiple [(ngModel)]="types" (ngModelChange)="search()" #key="ngModel">
+                                    <select-check-all [model]="key" [values]="listTypeValues"></select-check-all>
+                                    <mat-select-trigger>
+                                        {{types.length === listType.length ? 'All' : listTypeName}}
+                                    </mat-select-trigger>
+                                    <mat-option *ngFor="let type of listType" [value]="type.value">{{type.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint>{{ 'FIELD.GENERAL.FILTER_BY' | translate }}
+                                    <strong>{{ 'FIELD.GENERAL.TYPE_FILTER' | translate }}</strong>
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-9 col-9 kt-margin-bottom-10-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="{{ 'FIELD.GENERAL.SEARCH' | translate }}" [(ngModel)]="search_value"
+                                   (keyup.enter)="search()">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-2 kt-margin-bottom-10-mobile">
+                        <button mat-button color="primary" (click)="search()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- end::FILTERS -->
+
+            <div class="box-table">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)" class="mat-elevation-z8">
+                    <ng-container matColumnDef="index">
+                        <mat-header-cell *matHeaderCellDef class="col-small"> {{'FIELD.GENERAL.INDEX' | translate}} </mat-header-cell>
+                        <mat-cell class="col-small" *matCellDef="let element; let i = index;"> {{page * limit + i + 1}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.NAME' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="key">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.KEY' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.key}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.TYPE' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{getTypeDisplay(element.type)}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="typeValue">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.TYPEVALUE' | translate }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.typeValue}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="formatValue">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.FORMAT' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.formatValue}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="note">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.NOTE' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.note}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="object">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.OBJECT' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.object}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="createdTime">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.CREATED_TIME' | translate }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.createdTime | date: 'dd/MM/yyyy'}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="creatorName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'FIELD.GENERAL.CREATION_USER' | translate }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.creatorName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef> {{ 'FIELD.GENERAL.ACTIONS' | translate }} </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <ng-container>
+                                <button mat-icon-button color="primary" [hidden]="checkPermission('FIELD_CONFIG_UPDATE')"
+                                        [disabled]="checkPermission('FIELD_CONFIG_UPDATE')" (click)="editField(element)">
+                                    <mat-icon>create</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                            <ng-container>
+                                <button mat-icon-button color="primary" [hidden]="checkPermission('FIELD_CONFIG_DELETE')"
+                                        [disabled]="checkPermission('FIELD_CONFIG_DELETE')" (click)="deleteField(element)">
+                                    <mat-icon class="icon-delete active">delete</mat-icon>
+                                </button>&nbsp;
+                            </ng-container>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+            <div class="box-spiner" *ngIf='loading && dataSource.length == 0'>
+                <mat-spinner></mat-spinner>
+            </div>
+            <div class="no-record" *ngIf="!loading && dataSource.length==0 && this.canAccess == true">
+                <p>{{'COMMON.NO_RECORD_SEARCH' | translate}}</p>
+            </div>
+            <div class="no-record access-noti" *ngIf="dataSource.length==0 && this.canAccess == false">
+                <p>{{'COMMON.FORBIDDEN' | translate}}</p>
+            </div>
+            <mat-paginator [pageSize]="limit" [pageSizeOptions]="pageSizeOption" [length]="totalElement" [pageIndex]="page"
+                           [showFirstLastButtons]="true" (page)="pageChange($event)"></mat-paginator>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>
